@@ -25,6 +25,8 @@ def main(
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     eval_dir = artifacts_dir / "eval"
     eval_dir.mkdir(parents=True, exist_ok=True)
+    reports_dir = artifacts_dir / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Loading raw events from %s", input_path)
     raw_df = io.load_dataframe(input_path, logger=logger)
@@ -47,7 +49,7 @@ def main(
 
     if not no_report:
         report = split.build_split_report(grouped_df, splits)
-        report_path = eval_dir / "split_report.md"
+        report_path = reports_dir / "split_report.md"
         report_path.write_text(report, encoding="utf-8")
         logger.info("Split report saved to %s", report_path)
 

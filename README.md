@@ -57,6 +57,7 @@ artifacts/
     failure_analysis.md
     preds_test.jsonl
     baseline_rules_metrics.json
-  eval/split_report.md
+  reports/
+    split_report.md
 ```
 `artifacts/README.md` documents the purpose of each generated file while `.gitkeep` placeholders keep the directories checked in without storing large binaries.
