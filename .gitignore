@@ -19,5 +19,11 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Project outputs
-artifacts/
+artifacts/*
+!artifacts/README.md
+!artifacts/.gitkeep
+!artifacts/models/
+!artifacts/models/.gitkeep
+!artifacts/eval/
+!artifacts/eval/.gitkeep
 data/processed*/

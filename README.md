@@ -27,3 +27,20 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
+
+### Artifact layout
+```
+data/
+  dataset.jsonl
+artifacts/
+  processed.parquet
+  splits.json
+  models/
+    model.pkl
+    threshold.json
+  eval/
+    metrics.json
+    latency.json
+    failure_analysis.md
+```
+`artifacts/README.md` documents the purpose of each generated file while `.gitkeep` placeholders keep the directories checked in without storing large binaries.

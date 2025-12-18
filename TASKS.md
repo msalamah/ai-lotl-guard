@@ -5,7 +5,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 ## EPIC A — Project Bootstrap
 - [x] A1. Repository & environment initialized (pyproject, deps, uv sync success)
 - [x] A2. Makefile with setup/preprocess/train/evaluate/serve/test/lint targets
-- [ ] A3. Artifact directory structure scaffolded
+- [x] A3. Artifact directory structure scaffolded
 
 ## EPIC B — Data Loading, Validation & Splitting
 - [ ] B1. JSONL streaming loader with DataFrame conversion and row metadata
