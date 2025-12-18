@@ -21,7 +21,8 @@ __pycache__/
 # Project outputs
 artifacts/*
 !artifacts/README.md
-!artifacts/.gitkeep
+!artifacts/features/
+!artifacts/features/.gitkeep
 !artifacts/models/
 !artifacts/models/.gitkeep
 !artifacts/eval/

@@ -1,13 +1,38 @@
 # Artifacts Directory
 
-This folder hosts derived outputs created by LotL Guard pipelines. Expected files:
+The `artifacts/` tree stores all generated outputs. Nothing besides this README and `.gitkeep` sentinels is tracked in git.
 
-- `processed.parquet` — normalized/engineered dataset after preprocessing.
-- `splits.json` — metadata for leakage-safe train/val/test splits.
-- `models/model.pkl` — serialized estimator (e.g., LightGBM).
-- `models/threshold.json` — tuned threshold details (score, metrics).
-- `eval/metrics.json` — evaluation metrics summary.
-- `eval/latency.json` — inference/serving latency measurements.
-- `eval/failure_analysis.md` — qualitative review of misclassified samples.
+```
+data/
+  dataset.jsonl
 
-All files are ignored by git except this README and `.gitkeep` sentinels so that the directory tree is preserved without committing generated data.
+artifacts/
+  processed.parquet          # validated dataset
+  splits.json                # leakage-safe splits metadata
+
+  features/
+    X_train.npz
+    X_val.npz
+    X_test.npz
+    feature_list.json
+
+  models/
+    gbdt.pkl
+    gbdt_config.json
+    text_vectorizer.pkl
+    text_lr_model.pkl
+    minilm_classifier.pkl
+    ensemble_model.pkl
+    threshold.json
+    manifest.json
+
+  eval/
+    metrics.json
+    latency.json
+    cost_comparison.md
+    failure_analysis.md
+    preds_test.jsonl
+    baseline_rules_metrics.json
+```
+
+Downstream scripts populate these files as the pipeline progresses (preprocess → train → evaluate → serve).

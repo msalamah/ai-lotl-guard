@@ -36,12 +36,27 @@ data/
 artifacts/
   processed.parquet
   splits.json
+  features/
+    X_train.npz
+    X_val.npz
+    X_test.npz
+    feature_list.json
   models/
-    model.pkl
+    gbdt.pkl
+    gbdt_config.json
+    text_vectorizer.pkl
+    text_lr_model.pkl
+    minilm_classifier.pkl
+    ensemble_model.pkl
     threshold.json
+    manifest.json
   eval/
     metrics.json
     latency.json
+    cost_comparison.md
     failure_analysis.md
+    preds_test.jsonl
+    baseline_rules_metrics.json
+  eval/split_report.md
 ```
 `artifacts/README.md` documents the purpose of each generated file while `.gitkeep` placeholders keep the directories checked in without storing large binaries.
