@@ -2,48 +2,64 @@
 
 Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 
-## EPIC A — Project Bootstrap
-- [x] A1. Repository & environment initialized (pyproject, deps, uv sync success)
-- [x] A2. Makefile with setup/preprocess/train/evaluate/serve/test/lint targets
-- [x] A3. Artifact directory structure scaffolded
+## EPIC A — Project Bootstrap (uv + Makefile)
+- [x] **A1. Environment & Dependencies** — `pyproject.toml` includes pandas, numpy, scikit-learn, lightgbm, typer, pydantic, orjson, joblib, rich, matplotlib, sentence-transformers, onnxruntime, skl2onnx, shap and `uv run python -c "import lightgbm, sklearn, sentence_transformers"` passes.
+- [ ] **A2. Makefile UX** — `make` without args prints help; all targets (`setup`, `preprocess`, `train`, `evaluate`, `serve`, `test`, `lint`) have friendly error handling & run via uv.
+- [ ] **A3. Artifact Layout** — Files/directories per plan (`processed.parquet`, `splits.json`, `features/`, `models/`, `eval/` with metrics/latency/cost/failure outputs, etc.) scaffolded and documented.
 
-## EPIC B — Data Loading, Validation & Splitting
-- [ ] B1. JSONL streaming loader with DataFrame conversion and row metadata
-- [ ] B2. Pydantic schema validation dropping invalid rows
-- [ ] B3. Group-key generation for normalized command lines
-- [ ] B4. Group-stratified train/val/test split
-- [ ] B5. Split report with label distribution and group stats
+## EPIC B — Data Loading, Validation & Leakage-Safe Splits
+- [ ] **B1. JSONL loader** (`src/lotl_detector/data/io.py`, `scripts/preprocess.py`) streaming read with `row_id` + `row_hash`.
+- [ ] **B2. Schema validation** (`schema.py`) using Pydantic to filter invalid rows; produces `processed.parquet`.
+- [ ] **B3. Group-key generation** (`grouping.py`) with normalization helpers + `group_key` column.
+- [ ] **B4. Group-stratified splits** (`split.py`) ensuring leakage-safe train/val/test; write `artifacts/splits.json`.
+- [ ] **B5. Split report** (`split_report.md`) summarizing counts, label distribution, top groups; hook via `scripts/preprocess.py --report`.
 
 ## EPIC C — Feature Engineering
-- [ ] C1. Feature extraction module (keywords, paths, engineered fields)
-- [ ] C2. Unit tests covering feature logic
+- [ ] **C1. Feature extraction** (`features.py`) covering command/path numerics, LOLBin flags, categorical encodings.
+- [ ] **C2. Feature tests** (`tests/test_features.py`) with synthetic commands verifying flags & numerics.
 
 ## EPIC D — Baseline Models
-- [ ] D1. Majority-class baseline
-- [ ] D2. Rule-based baseline
+- [ ] **D1. Majority baseline** — simple predictor + metrics.
+- [ ] **D2. Rule-based baseline** — 10–20 heuristic rules with explanations + `artifacts/baseline_rules_metrics.json`.
 
-## EPIC E — LightGBM Model & Thresholding
-- [ ] E1. LightGBM training pipeline
-- [ ] E2. Threshold tuning achieving ≥95% recall with explanations
+## EPIC E — GBDT Model + Thresholding + Explanations
+- [ ] **E1. LightGBM training pipeline** (`scripts/train.py --model gbdt`) saving `gbdt.pkl`, config, feature list.
+- [ ] **E2. Threshold tuning** (`models/calibrate.py`) achieving ≥95% recall and persisting `threshold.json`.
+- [ ] **E3. Explanation layer** (`inference/explain.py`) producing signals + narratives for predictions.
 
-## EPIC F — Inference Pipeline
-- [ ] F1. Predictor.load implementation
-- [ ] F2. predict_one and predict_batch interfaces
+## EPIC F — Text/LLM Component & Ensemble
+- [ ] **F1. TF-IDF + Logistic Regression** (`models/text_encoder.py`) saving vectorizer + classifier artifacts.
+- [ ] **F2. Sentence-transformer embedding model** (MiniLM) + lightweight classifier (optional but planned).
+- [ ] **F3. Hybrid ensemble** (`models/ensemble.py`) combining GBDT + text scores with re-calibrated threshold.
 
-## EPIC G — Evaluation
-- [ ] G1. Metrics generation
-- [ ] G2. Latency tracking
-- [ ] G3. Failure analysis + cost comparison
+## EPIC G — Local LLM Fine-Tune for Classification + Reasoning
+- [ ] **G1. Data prep for LLM** — derive instruction/response pairs from `dataset.jsonl` (train/val only) respecting group splits; structure prompts with event context → label/explanation target JSON.
+- [ ] **G2. Fine-tuning pipeline** — implement LoRA/QLoRA training script (e.g., using `peft` + `transformers`) that runs fully offline on a local GPU/CPU (quantization acceptable); log metrics and save adapter weights under `artifacts/models/llm/`.
+- [ ] **G3. Inference integration** — add module (e.g., `src/lotl_detector/models/llm_reasoner.py`) that loads the fine-tuned local LLM, runs predictions in batch/stream mode, and returns label + natural-language reason.
+- [ ] **G4. Benchmark & cost comparison** — evaluate latency, precision/recall, and cost vs. Claude to ensure ≥2× faster / ≥30× cheaper; document results in REPORT.md plus a dedicated `artifacts/eval/llm_reasoner_metrics.json`.
 
-## EPIC H — Chainlit Demo
-- [ ] H1. JSON input UI with explanations
-- [ ] H2. Example loader
+## EPIC H — Inference & Export
+- [ ] **G1. Predictor API** (`inference/predictor.py`) with load/predict_one/predict_batch + explanations.
+- [ ] **G2. Batch inference CLI** (`scripts/evaluate.py`) writing `artifacts/eval/preds_test.jsonl`.
+- [ ] **G3. ONNX export** (`inference/export.py`, `scripts/export_onnx.py`) + latency comparison via onnxruntime.
 
-## EPIC I — Colab & SageMaker Training
-- [ ] I1. Colab notebook
-- [ ] I2. SageMaker training entrypoint and launch script
+## EPIC I — Training & Cloud Orchestration
+- [ ] **H1. Unified training CLI** (`scripts/train.py`) supporting gbdt/text/ensemble selection.
+- [ ] **H2. Colab notebook** (`notebooks/colab_train.ipynb`) automating preprocess → train → evaluate flow.
+- [ ] **H3. SageMaker tooling** (`sagemaker/train_entry.py`, `scripts/sagemaker_launch.py`) with dry-run launcher.
 
-## EPIC J — Documentation
-- [ ] J1. README.md
-- [ ] J2. REPORT.md
-- [ ] J3. LINKEDIN_POST.md
+## EPIC J — Evaluation, Latency, Cost & Failures
+- [ ] **I1. Metrics computation** (`eval/metrics.py`) storing precision/recall/F1/confusion at test time.
+- [ ] **I2. Latency benchmark** (`eval/latency.py`) capturing avg/p50/p95 CPU timings.
+- [ ] **I3. Cost model** (`eval/cost.py`, `cost_comparison.md`) comparing vs Claude baseline.
+- [ ] **I4. Failure analysis & report prep** (`eval/failures.py`, `eval/report.py`, `REPORT.md`) highlighting top FP/FN clusters.
+
+## EPIC K — Chainlit Demo & Examples
+- [ ] **J1. Chainlit app** (`app/chainlit_app.py`) wired to Predictor with explanations.
+- [ ] **J2. Demo examples** (`examples/*.json`) + Chainlit quick-load buttons.
+
+## EPIC L — Documentation & Presentation
+- [ ] **K1. README refresh** — problem statement, architecture, how-to-run, perf summary.
+- [ ] **K2. REPORT.md** — detailed results, latency, cost, failure modes, limitations.
+- [ ] **K3. LINKEDIN_POST.md** — 150–400 word launch announcement.
+- [ ] **K4. Slides outline** (`slides/outline.md`) covering problem, approach, results, future work.

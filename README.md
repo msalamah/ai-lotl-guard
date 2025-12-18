@@ -11,7 +11,7 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
    ```
 4. Verify heavy dependencies resolve correctly:
    ```bash
-   uv run python -c "import lightgbm; import sklearn"
+   uv run python -c "import lightgbm, sklearn, sentence_transformers"
    ```
 
 ## Useful commands
