@@ -31,7 +31,7 @@ setup:
 
 preprocess:
 	$(require-dataset)
-	$(not-implemented)
+	uv run python scripts/preprocess.py --input $(DATASET) --artifacts $(ARTIFACT_DIR)
 
 train:
 	$(require-dataset)

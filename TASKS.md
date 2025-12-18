@@ -8,11 +8,11 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **A3. Artifact Layout** — Files/directories per plan (`processed.parquet`, `splits.json`, `features/`, `models/`, `eval/` with metrics/latency/cost/failure outputs, etc.) scaffolded and documented.
 
 ## EPIC B — Data Loading, Validation & Leakage-Safe Splits
-- [ ] **B1. JSONL loader** (`src/lotl_detector/data/io.py`, `scripts/preprocess.py`) streaming read with `row_id` + `row_hash`.
-- [ ] **B2. Schema validation** (`schema.py`) using Pydantic to filter invalid rows; produces `processed.parquet`.
-- [ ] **B3. Group-key generation** (`grouping.py`) with normalization helpers + `group_key` column.
-- [ ] **B4. Group-stratified splits** (`split.py`) ensuring leakage-safe train/val/test; write `artifacts/splits.json`.
-- [ ] **B5. Split report** (`split_report.md`) summarizing counts, label distribution, top groups; hook via `scripts/preprocess.py --report`.
+- [x] **B1. JSONL loader** (`src/lotl_detector/data/io.py`, `scripts/preprocess.py`) streaming read with `row_id` + `row_hash`.
+- [x] **B2. Schema validation** (`schema.py`) using Pydantic to filter invalid rows; produces `processed.parquet`.
+- [x] **B3. Group-key generation** (`grouping.py`) with normalization helpers + `group_key` column.
+- [x] **B4. Group-stratified splits** (`split.py`) ensuring leakage-safe train/val/test; write `artifacts/splits.json`.
+- [x] **B5. Split report** (`split_report.md`) summarizing counts, label distribution, top groups; hook via `scripts/preprocess.py --report`.
 
 ## EPIC C — Feature Engineering
 - [ ] **C1. Feature extraction** (`features.py`) covering command/path numerics, LOLBin flags, categorical encodings.
