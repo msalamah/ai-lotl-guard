@@ -19,5 +19,11 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `uv run ruff check` — static analysis once rules are defined.
 - `uv run python src/...` — run project modules without activating a virtualenv manually.
 
+### Make targets
+- `make setup` — run `uv sync`.
+- `make preprocess|train|evaluate|serve` — placeholder commands that describe the future pipeline entry points.
+- `make test` — executes pytest via uv.
+- `make lint` — runs Ruff via uv.
+
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
