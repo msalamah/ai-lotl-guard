@@ -4,7 +4,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 
 ## EPIC A — Project Bootstrap (uv + Makefile)
 - [x] **A1. Environment & Dependencies** — `pyproject.toml` includes pandas, numpy, scikit-learn, lightgbm, typer, pydantic, orjson, joblib, rich, matplotlib, sentence-transformers, onnxruntime, skl2onnx, shap and `uv run python -c "import lightgbm, sklearn, sentence_transformers"` passes.
-- [ ] **A2. Makefile UX** — `make` without args prints help; all targets (`setup`, `preprocess`, `train`, `evaluate`, `serve`, `test`, `lint`) have friendly error handling & run via uv.
+- [x] **A2. Makefile UX** — `make` without args prints help; all targets (`setup`, `preprocess`, `train`, `evaluate`, `serve`, `test`, `lint`) have friendly error handling & run via uv.
 - [ ] **A3. Artifact Layout** — Files/directories per plan (`processed.parquet`, `splits.json`, `features/`, `models/`, `eval/` with metrics/latency/cost/failure outputs, etc.) scaffolded and documented.
 
 ## EPIC B — Data Loading, Validation & Leakage-Safe Splits

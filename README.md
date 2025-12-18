@@ -20,6 +20,7 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `uv run python src/...` — run project modules without activating a virtualenv manually.
 
 ### Make targets
+- `make` — print the available targets and their purpose.
 - `make setup` — run `uv sync`.
 - `make preprocess|train|evaluate|serve` — placeholder commands that describe the future pipeline entry points.
 - `make test` — executes pytest via uv.
