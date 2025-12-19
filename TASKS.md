@@ -24,7 +24,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **C2. Feature tests** (`tests/test_features.py`) with synthetic commands verifying flags & numerics.
 
 ## EPIC D — Baseline Models
-- [ ] **D1. Majority baseline** — simple predictor + metrics.
+- [x] **D1. Majority baseline** — simple predictor + metrics.
 - [ ] **D2. Rule-based baseline** — 10–20 heuristic rules with explanations + `artifacts/baseline_rules_metrics.json`.
 
 ## EPIC E — GBDT Model + Thresholding + Explanations
