@@ -20,7 +20,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **Bx3. Insight summary** — capture key findings (top attack patterns, benign clusters, data quality issues) for managers.
 
 ## EPIC C — Feature Engineering
-- [ ] **C1. Feature extraction** (`features.py`) covering command/path numerics, LOLBin flags, categorical encodings.
+- [x] **C1. Feature extraction** (`features.py`) covering command/path numerics, LOLBin flags, categorical encodings.
 - [ ] **C2. Feature tests** (`tests/test_features.py`) with synthetic commands verifying flags & numerics.
 
 ## EPIC D — Baseline Models
