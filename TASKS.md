@@ -21,7 +21,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 
 ## EPIC C — Feature Engineering
 - [x] **C1. Feature extraction** (`features.py`) covering command/path numerics, LOLBin flags, categorical encodings.
-- [ ] **C2. Feature tests** (`tests/test_features.py`) with synthetic commands verifying flags & numerics.
+- [x] **C2. Feature tests** (`tests/test_features.py`) with synthetic commands verifying flags & numerics.
 
 ## EPIC D — Baseline Models
 - [ ] **D1. Majority baseline** — simple predictor + metrics.
