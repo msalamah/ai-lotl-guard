@@ -26,6 +26,28 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `make test` — executes pytest via uv.
 - `make lint` — runs Ruff via uv.
 
+## Current pipeline status
+
+### Preprocessing
+- Entry point: `make preprocess` / `scripts/preprocess.py`.
+- Actions: stream `data/dataset.jsonl`, validate `claude-sonnet-4-5.predicted_label`, stamp `row_id`/`row_hash`, build leakage-safe `group_key`s, write `artifacts/processed.parquet`, `artifacts/splits.json`, and `artifacts/reports/split_report.md`.
+
+### Data exploration
+- Assets: `notebooks/data_exploration.ipynb`, `scripts/data_overview.py`.
+- Actions: compare `_label` vs Claude predictions, inspect class balance/top LOLBins/command lengths, export insights to `artifacts/reports/data_overview.md` for managers.
+
+### Feature engineering
+- Module: `src/lotl_detector/features/extraction.py`.
+- Actions: derive numeric stats (command length, token count, special char count), boolean LOLBin flags (`has_powershell`, `has_bitsadmin`, etc.), and categorical bases (`source_image_base`, `cmd_exe_base`). These feed future models (one-hot/target encoders, TF-IDF/embeddings planned in EPIC F).
+
+### Majority baseline
+- CLI: `scripts/baseline.py`.
+- Actions: read train-split labels from `artifacts/processed.parquet`, count positives vs. negatives, and store whichever label is most frequent as the “model.” Inference simply emits that majority label for every sample; we run this on the test split and log metrics (`artifacts/models/majority_metrics.json`). Current test performance (n=27): accuracy 0.67, `label=1` precision/recall 0.67/1.0, `label=0` 0.0/0.0. This sets a sanity baseline we must beat with rule-based, feature-based, and ensemble detectors.
+
+### Rule-based baseline
+- CLI: `scripts/baseline.py --help` (command `rule-baseline`).
+- Actions: learn rule weights from the training split by computing feature correlations (keyword flags, long commands, suspicious executables) using the engineered features, store the resulting rule set in `artifacts/models/rule_baseline.json`, then score the test split. Metrics land in `artifacts/eval/baseline_rules_metrics.json`. Current test performance (n=27): accuracy ≈0.78; `label=0` precision/recall ≈0.71/0.56, `label=1` precision/recall ≈0.80/0.89—providing an interpretable yet data-driven baseline before GBDT/text models.
+
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
 
