@@ -25,7 +25,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 
 ## EPIC D — Baseline Models
 - [x] **D1. Majority baseline** — simple predictor + metrics.
-- [ ] **D2. Rule-based baseline** — 10–20 heuristic rules with explanations + `artifacts/baseline_rules_metrics.json`.
+- [x] **D2. Rule-based baseline** — 10–20 heuristic rules with explanations + `artifacts/baseline_rules_metrics.json`.
 
 ## EPIC E — GBDT Model + Thresholding + Explanations
 - [ ] **E1. LightGBM training pipeline** (`scripts/train.py --model gbdt`) saving `gbdt.pkl`, config, feature list.

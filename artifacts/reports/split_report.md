@@ -1,13 +1,13 @@
 # Split Report
 
 ## Train
-Rows: 149 | Groups: 109 | Malicious: 89 | Benign: 60 | Malicious ratio: 0.60
+Rows: 126 | Groups: 90 | Malicious: 80 | Benign: 46 | Malicious ratio: 0.63
 
 ## Validation
-Rows: 28 | Groups: 24 | Malicious: 18 | Benign: 10 | Malicious ratio: 0.64
+Rows: 28 | Groups: 23 | Malicious: 17 | Benign: 11 | Malicious ratio: 0.61
 
 ## Test
-Rows: 27 | Groups: 24 | Malicious: 18 | Benign: 9 | Malicious ratio: 0.67
+Rows: 50 | Groups: 44 | Malicious: 28 | Benign: 22 | Malicious ratio: 0.56
 
 ## Top group_key clusters
 - c:\windows\explorer.exe::c:\windows\explorer.exe: 7 rows

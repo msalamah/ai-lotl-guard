@@ -55,9 +55,13 @@ def stratified_group_split(
     test_ratio: float = 0.15,
     seed: int = 13,
     logger: logging.Logger | None = None,
+    train_target: int | None = None,
+    val_target: int | None = None,
+    test_target: int | None = None,
 ) -> SplitArtifact:
     assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-6, "Ratios must sum to 1"
     aggregated = _group_labels(df)
+    group_sizes = df.groupby(GROUP_KEY_COLUMN)["row_id"].count().to_dict()
     groups = aggregated[GROUP_KEY_COLUMN].values
     strat_labels = aggregated["strat_label"].values
 
@@ -85,6 +89,21 @@ def stratified_group_split(
     def unique_groups(values: Sequence[str]) -> list[str]:
         seq = values.tolist() if isinstance(values, np.ndarray) else list(values)
         return sorted(set(seq))
+
+    if all(value is not None for value in (train_target, val_target, test_target)):
+        train_groups, val_groups, test_groups = _rebalance_groups(
+            {
+                "train": unique_groups(train_groups),
+                "val": unique_groups(val_groups),
+                "test": unique_groups(test_groups),
+            },
+            group_sizes,
+            {"train": train_target or 0, "val": val_target or 0, "test": test_target or 0},
+        )
+    else:
+        train_groups = unique_groups(train_groups)
+        val_groups = unique_groups(val_groups)
+        test_groups = unique_groups(test_groups)
 
     train_ids = ids_for(train_groups)
     val_ids = ids_for(val_groups)
@@ -147,3 +166,31 @@ def build_split_report(df: pd.DataFrame, splits: SplitArtifact) -> str:
         lines.append(f"- {key}: {size} rows")
     lines.append("")
     return "\n".join(lines)
+
+
+def _rebalance_groups(
+    groups: Dict[str, list[str]],
+    group_sizes: Dict[str, int],
+    targets: Dict[str, int],
+) -> tuple[list[str], list[str], list[str]]:
+    mutable = {split: list(values) for split, values in groups.items()}
+
+    def counts() -> Dict[str, int]:
+        return {split: sum(group_sizes.get(g, 0) for g in values) for split, values in mutable.items()}
+
+    counts_map = counts()
+    for _ in range(1000):
+        over_split = max(mutable.keys(), key=lambda s: counts_map[s] - targets.get(s, 0))
+        deficit_split = max(mutable.keys(), key=lambda s: targets.get(s, 0) - counts_map[s])
+        over_amount = counts_map[over_split] - targets.get(over_split, 0)
+        deficit_amount = targets.get(deficit_split, 0) - counts_map[deficit_split]
+        if over_amount <= 0 or deficit_amount <= 0:
+            break
+        candidates = sorted(mutable[over_split], key=lambda g: group_sizes.get(g, 0))
+        if not candidates:
+            break
+        moving = candidates[0]
+        mutable[over_split].remove(moving)
+        mutable[deficit_split].append(moving)
+        counts_map = counts()
+    return mutable["train"], mutable["val"], mutable["test"]
