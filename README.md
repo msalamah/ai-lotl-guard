@@ -48,6 +48,10 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - CLI: `scripts/baseline.py --help` (command `rule-baseline`).
 - Actions: learn rule weights from the training split by computing feature correlations (keyword flags, long commands, suspicious executables) using the engineered features, store the resulting rule set in `artifacts/models/rule_baseline.json`, then score the test split. Metrics land in `artifacts/eval/baseline_rules_metrics.json`. Current test performance (n=50): accuracy ≈0.74; `label=0` precision/recall ≈0.74/0.64, `label=1` precision/recall ≈0.74/0.82—providing an interpretable yet data-driven baseline before GBDT/text models.
 
+### LightGBM training (EPIC E1)
+- CLI: `uv run python scripts/train.py --model gbdt`.
+- Actions: load training/validation splits, featurize via `build_feature_frame`, train a LightGBM classifier (`artifacts/models/gbdt.pkl`) with categorical handling for executables/commands, and write config + feature metadata (`gbdt_config.json`, `feature_list.json`). Validation metrics are stored at `artifacts/eval/gbdt_val_metrics.json` (current val accuracy ≈0.71, precision/recall ≈0.74/0.82 for label 1).
+
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
 

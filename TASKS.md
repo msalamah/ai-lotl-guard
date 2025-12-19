@@ -28,7 +28,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **D2. Rule-based baseline** — 10–20 heuristic rules with explanations + `artifacts/baseline_rules_metrics.json`.
 
 ## EPIC E — GBDT Model + Thresholding + Explanations
-- [ ] **E1. LightGBM training pipeline** (`scripts/train.py --model gbdt`) saving `gbdt.pkl`, config, feature list.
+- [x] **E1. LightGBM training pipeline** (`scripts/train.py --model gbdt`) saving `gbdt.pkl`, config, feature list.
 - [ ] **E2. Threshold tuning** (`models/calibrate.py`) achieving ≥95% recall and persisting `threshold.json`.
 - [ ] **E3. Explanation layer** (`inference/explain.py`) producing signals + narratives for predictions.
 
