@@ -34,7 +34,9 @@ def majority(
         test_df = df[df["row_id"].isin(test_ids)]
         preds = model.predict(len(test_df))
         report = classification_report(test_df["_label"], preds, output_dict=True)
-        metrics_path = output_dir / "majority_metrics.json"
+        metrics_dir = Path("artifacts/eval")
+        metrics_dir.mkdir(parents=True, exist_ok=True)
+        metrics_path = metrics_dir / "majority_metrics.json"
         metrics_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
         typer.echo(f"Saved metrics to {metrics_path}")
 
