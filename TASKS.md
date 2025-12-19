@@ -17,7 +17,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 ## EPIC Bx — Data Exploration & Understanding
 - [x] **Bx1. Notebook scaffolding** — create `notebooks/data_exploration.ipynb` loading processed data with starter EDA cells (label distribution, LOLBin counts, timelines).
 - [x] **Bx2. Automated data overview report** — script/notebook that outputs descriptive stats + charts into `artifacts/reports/data_overview.md` for stakeholder briefings.
-- [ ] **Bx3. Insight summary** — capture key findings (top attack patterns, benign clusters, data quality issues) for managers.
+- [x] **Bx3. Insight summary** — capture key findings (top attack patterns, benign clusters, data quality issues) for managers.
 
 ## EPIC C — Feature Engineering
 - [ ] **C1. Feature extraction** (`features.py`) covering command/path numerics, LOLBin flags, categorical encodings.
