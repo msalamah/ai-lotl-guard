@@ -43,7 +43,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 
 ## EPIC G — Local LLM Fine-Tune for Classification + Reasoning
 - [x] **G1. Data prep for LLM** — derive instruction/response pairs from `dataset.jsonl` (train/val only) respecting group splits; structure prompts with event context → label/explanation target JSON.
-- [ ] **G2. Fine-tuning pipeline** — implement LoRA/QLoRA training script (e.g., using `peft` + `transformers`) that runs fully offline on a local GPU/CPU (quantization acceptable); log metrics and save adapter weights under `artifacts/models/llm/`.
+- [x] **G2. Fine-tuning pipeline** — implement LoRA/QLoRA training script (e.g., using `peft` + `transformers`) that runs fully offline on a local GPU/CPU (quantization acceptable); log metrics and save adapter weights under `artifacts/models/llm/`.
 - [ ] **G3. Inference integration** — add module (e.g., `src/lotl_detector/models/llm_reasoner.py`) that loads the fine-tuned local LLM, runs predictions in batch/stream mode, and returns label + natural-language reason.
 - [ ] **G4. Benchmark & cost comparison** — evaluate latency, precision/recall, and cost vs. Claude to ensure ≥2× faster / ≥30× cheaper; document results in REPORT.md plus a dedicated `artifacts/eval/llm_reasoner_metrics.json`.
 

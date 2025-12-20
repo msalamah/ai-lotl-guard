@@ -92,6 +92,10 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - Module: `src/lotl_detector/data/llm_prep.py` with CLI `uv run python scripts/prepare_llm_data.py`.
 - Actions: read `artifacts/processed.parquet`, respect the leakage-safe `train`/`val` IDs from `artifacts/splits.json`, and emit Alpaca-style instruction/response pairs to `artifacts/llm/{train,val}.jsonl`. Each record contains the normalized event context (JSON), a standard instruction (“decide whether this telemetry event is benign or malicious and justify”), and the target JSON built from Claude’s label + explanation (`label`, `explanation`, and optional `attack_technique`). These files are the starting point for local instruction tuning (LoRA/QLoRA) in EPIC G2—see `docs/llm_data.md` for schema details and examples.
 
+### LLM fine-tuning (EPIC G2)
+- Module: `scripts/train_llm.py` + helpers in `src/lotl_detector/llm/`.
+- Actions: load the prepared instruction data, tokenize prompts/responses, and fine-tune a Hugging Face causal LM via LoRA (`peft`) using `transformers.Trainer`. The script defaults to TinyLlama but accepts any base model path. Outputs land in `artifacts/models/llm/` (LoRA adapter, tokenizer snapshot, checkpoints). Detailed steps live in `docs/llm_training.md`.
+
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
 
