@@ -88,6 +88,10 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - Module: `src/lotl_detector/models/ensemble.py` with CLI `uv run python scripts/train.py --model ensemble`.
 - Actions: load existing tree models (GBDT/XGB/RF) plus TF-IDF (and, if available, the MiniLM sentence-transformer model), score train/val splits to obtain base probabilities, and train a logistic-regression meta-classifier that fuses the signals. By default the ensemble picks the highest-priority tree artifact (GBDT → XGB → RF) and the highest-priority text artifact (TF-IDF → MiniLM), but you can pass custom provider metadata if you want another pairing. Artifacts include `artifacts/models/ensemble.pkl`, `ensemble_config.json` (provider metadata, e.g. model names/paths), and `ensemble_feature_list.json`. Validation metrics are written to `artifacts/eval/ensemble_val_metrics.json`. During `make evaluate`, we regenerate ROC/PR/probability plots plus `ensemble_threshold_metrics.json` by re-running the base providers and plotting the ensemble outputs, giving stakeholders a calibrated view of how combining text + tabular (and MiniLM) models improves precision/recall.
 
+### LLM data prep (EPIC G1)
+- Module: `src/lotl_detector/data/llm_prep.py` with CLI `uv run python scripts/prepare_llm_data.py`.
+- Actions: read `artifacts/processed.parquet`, respect the leakage-safe `train`/`val` IDs from `artifacts/splits.json`, and emit Alpaca-style instruction/response pairs to `artifacts/llm/{train,val}.jsonl`. Each record contains the normalized event context (JSON), a standard instruction (“decide whether this telemetry event is benign or malicious and justify”), and the target JSON built from Claude’s label + explanation (`label`, `explanation`, and optional `attack_technique`). These files are the starting point for local instruction tuning (LoRA/QLoRA) in EPIC G2—see `docs/llm_data.md` for schema details and examples.
+
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
 
