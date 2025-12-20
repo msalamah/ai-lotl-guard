@@ -17,6 +17,9 @@ def test_keyword_flags_and_metrics():
     assert feats["cmd_token_count"] >= 4
     assert feats["source_image_base"] == "powershell.exe"
     assert feats["cmd_exe_base"] == "powershell.exe"
+    assert feats["cmd_upper_ratio"] > 0
+    assert feats["cmd_digit_count"] >= 0
+    assert feats["image_path_depth"] >= 1
 
 
 def test_feature_frame_shapes():
@@ -24,9 +27,14 @@ def test_feature_frame_shapes():
         [
             {"CommandLine": "cmd.exe /c whoami", "SourceImage": r"C:\\Windows\\System32\\cmd.exe"},
             {"CommandLine": "bitsadmin /transfer job1", "SourceImage": r"C:\\Windows\\System32\\bitsadmin.exe"},
+            {
+                "CommandLine": "cmd.exe /c makecab secret.txt backup.cab",
+                "SourceImage": r"C:\\Windows\\System32\\cmd.exe",
+            },
         ]
     )
     feature_df = build_feature_frame(df)
-    assert feature_df.shape[0] == 2
+    assert feature_df.shape[0] == 3
     assert "has_bitsadmin" in feature_df.columns
     assert feature_df.loc[1, "has_bitsadmin"] == 1.0
+    assert feature_df.loc[2, "has_suspicious_ext"] == 1.0

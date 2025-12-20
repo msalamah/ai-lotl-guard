@@ -10,9 +10,7 @@ import pandas as pd
 from sklearn.metrics import classification_report
 
 from lotl_detector.data import LABEL_COLUMN
-from lotl_detector.features import build_feature_frame
-
-CATEGORICAL_FEATURES = ["source_image_base", "cmd_exe_base"]
+from lotl_detector.features import CATEGORICAL_FEATURES, build_feature_frame
 DEFAULT_PARAMS: Dict[str, object] = {
     "n_estimators": 300,
     "learning_rate": 0.05,

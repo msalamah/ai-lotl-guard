@@ -29,8 +29,12 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 
 ## EPIC E — GBDT Model + Thresholding + Explanations
 - [x] **E1. LightGBM training pipeline** (`scripts/train.py --model gbdt`) saving `gbdt.pkl`, config, feature list.
-- [ ] **E2. Threshold tuning** (`models/calibrate.py`) achieving ≥95% recall and persisting `threshold.json`.
-- [ ] **E3. Explanation layer** (`inference/explain.py`) producing signals + narratives for predictions.
+- [x] **E1b. XGBoost training pipeline** — mirror LightGBM flow with `xgboost` model artifacts + metrics.
+- [x] **E1c. RandomForest baseline** — scikit-learn RandomForestClassifier training/evaluation for comparison.
+- [x] **E2. Threshold tuning** (`models/calibrate.py`) achieving ≥95% recall and persisting `threshold.json`.
+- [x] **E3. Explanation layer** (`inference/explain.py`) producing signals + narratives for predictions.
+- [x] **E3b. LLM explanation generator** (`inference/llm_reasoner.py`, `scripts/llm_explain.py`) to craft natural-language reasons via local LLMs or deterministic fallback.
+- [x] **E3c. Claude judge comparison** (`eval/judge.py`, `scripts/judge.py`) prompting Claude Sonnet-4.5 to evaluate our outputs vs. ground truth.
 
 ## EPIC F — Text/LLM Component & Ensemble
 - [ ] **F1. TF-IDF + Logistic Regression** (`models/text_encoder.py`) saving vectorizer + classifier artifacts.

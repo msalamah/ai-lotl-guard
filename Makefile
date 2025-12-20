@@ -39,7 +39,32 @@ train:
 
 evaluate:
 	$(require-dataset)
-	$(not-implemented)
+	@if [ ! -f artifacts/models/gbdt.pkl ]; then \
+		echo "Missing artifacts/models/gbdt.pkl. Train the GBDT model before running 'make evaluate'."; \
+		exit 1; \
+	fi
+	uv run python scripts/calibrate.py
+	uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir $(ARTIFACT_DIR)/reports
+	@if [ -f artifacts/models/xgb.pkl ]; then \
+		uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/xgb.pkl \
+			--feature-list-path artifacts/models/xgb_feature_list.json \
+			--model-config-path artifacts/models/xgb_config.json \
+			--prefix xgb \
+			--output-dir $(ARTIFACT_DIR)/reports ; \
+	else \
+		echo "Skipping XGBoost plots (artifacts/models/xgb.pkl not found)"; \
+	fi
+	@if [ -f artifacts/models/rf.pkl ]; then \
+		uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/rf.pkl \
+			--feature-list-path artifacts/models/rf_feature_list.json \
+			--model-config-path artifacts/models/rf_config.json \
+			--prefix rf \
+			--output-dir $(ARTIFACT_DIR)/reports ; \
+	else \
+		echo "Skipping RandomForest plots (artifacts/models/rf.pkl not found)"; \
+	fi
 
 serve:
 	$(require-dataset)

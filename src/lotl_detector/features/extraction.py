@@ -5,6 +5,9 @@ from typing import Dict, Iterable
 
 import pandas as pd
 
+CATEGORICAL_FEATURES = ["source_image_base", "cmd_exe_base"]
+SUSPICIOUS_EXTS = {".cab", ".zip", ".ps1", ".bat", ".vbs"}
+
 KEYWORD_PATTERNS = {
     "has_powershell": re.compile(r"powershell", re.IGNORECASE),
     "has_encodedcommand": re.compile(r"-enc(odedcommand)?", re.IGNORECASE),
@@ -32,10 +35,25 @@ def extract_features(row: pd.Series) -> Dict[str, float]:
     features["cmd_length"] = len(command)
     features["cmd_token_count"] = len(tokens)
     features["num_special_chars"] = sum(c in "|&;" for c in command)
+    alphabetic_chars = [c for c in command if c.isalpha()]
+    uppercase = sum(c.isupper() for c in alphabetic_chars)
+    features["cmd_upper_ratio"] = uppercase / len(alphabetic_chars) if alphabetic_chars else 0.0
+    features["cmd_digit_count"] = sum(c.isdigit() for c in command)
+    features["has_pipe"] = 1.0 if "|" in command or "&&" in command else 0.0
     for name, pattern in KEYWORD_PATTERNS.items():
         features[name] = 1.0 if pattern.search(command) else 0.0
+    features["has_suspicious_ext"] = (
+        1.0
+        if any(
+            token.lower().strip('\"').strip("'").endswith(ext)
+            for token in tokens
+            for ext in SUSPICIOUS_EXTS
+        )
+        else 0.0
+    )
     features["source_image_base"] = source.split("\\")[-1].lower()
     features["cmd_exe_base"] = tokens[0].lower() if tokens else ""
+    features["image_path_depth"] = source.count("\\")
     return features
 
 
