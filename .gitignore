@@ -17,6 +17,7 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 .ipynb_checkpoints/
+.matplotlib-cache/
 
 # Project outputs
 artifacts/*

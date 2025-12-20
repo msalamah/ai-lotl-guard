@@ -23,7 +23,7 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `make` — print the available targets and their purpose.
 - `make setup` — run `uv sync`.
 - `make preprocess|train|serve` — placeholder commands that describe the future pipeline entry points.
-- `make evaluate` — runs `scripts/calibrate.py` for the latest GBDT model and regenerates ROC/PR/probability plots for every trained tree model.
+- `make evaluate` — runs `scripts/calibrate.py` for the latest GBDT model and, using the **validation split**, regenerates ROC/PR/probability plots **and per-threshold metrics tables** for every trained model (GBDT/XGB/RF/Text/Sentence/Ensemble).
 - `make test` — executes pytest via uv.
 - `make lint` — runs Ruff via uv.
 
@@ -67,7 +67,7 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 
 ### Calibration diagnostics
 - CLI: `uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir artifacts/reports`.
-- Actions: regenerate ROC and Precision-Recall curves plus a probability-distribution histogram colored by the true label, all using the validation split. When `artifacts/models/threshold.json` references the same model, both ROC and PR plots overlay the calibrated threshold point and a 0.1-spaced threshold grid annotated with numeric values so we can visually judge how the operating point moves. Plots save under `artifacts/reports/{model}_{roc,pr,prob}_*.png`, giving a quick visual check before promoting thresholds to production.
+- Actions: regenerate ROC and Precision-Recall curves plus a probability-distribution histogram colored by the true label, all using the validation split. Each run also emits `{prefix}_threshold_metrics.json`, a table covering thresholds at 0.05 increments (0→1) with precision/recall/TP/FP/TN/FN so supervisors can inspect trade-offs numerically. When `artifacts/models/threshold.json` references the same model, both ROC and PR plots also highlight the calibrated threshold point in addition to the 0.05 grid.
 
 ### Explanation layer (EPIC E3)
 - Module: `src/lotl_detector/inference/explain.py` with CLI `uv run python scripts/explain.py --split test --limit 20`.
@@ -75,6 +75,18 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - LLM augmentation: run `uv run python scripts/llm_explain.py --base-explanations artifacts/reports/gbdt_explanations.jsonl --output artifacts/reports/gbdt_llm_explanations.jsonl` to turn those structured entries into natural-language blurbs via LangChain’s Ollama client. Set `LOCAL_LLM_MODEL=llama3` (and optionally `OLLAMA_BASE_URL`) so the CLI knows which local model to query; if you need a custom shell command, keep `LOCAL_LLM_COMMAND` as a fallback. Each JSON line gains an `llm_reason` field.
 - Note: the llama model is **only** used to generate explanations. All predictions still come from the trained tabular classifiers (GBDT/XGB/RF).
 - Judge pipeline: when ready to benchmark against Claude, invoke `uv run python scripts/judge.py --predictions artifacts/reports/gbdt_llm_explanations.jsonl --output artifacts/reports/judge_gbdt.jsonl`. This calls `anthropic` (requires `ANTHROPIC_API_KEY`) to have Claude Sonnet-4.5 compare our predictions/reasons with the ground-truth label stored in `artifacts/processed.parquet`, producing agreement verdicts + improvement suggestions for audit trails.
+
+### Text baseline (EPIC F1)
+- Module: `src/lotl_detector/models/text.py` with CLI `uv run python scripts/train.py --model text`.
+- Actions: normalize `CommandLine`, fit a `TfidfVectorizer` (1–2 grams) and `LogisticRegression` classifier, and store artifacts: `artifacts/models/text.pkl` (bundle), `text_vectorizer.pkl`, `text_classifier.pkl`, plus `text_feature_list.json`/`text_config.json`. Validation metrics (with macro & weighted averages) land in `artifacts/eval/text_val_metrics.json`, and `make evaluate` renders ROC/PR/probability plots plus `text_threshold_metrics.json` via `scripts/plot_eval_curves.py --text-mode tfidf`. This gives us a lightweight text-only detector we can ensemble with tabular models in later tasks.
+
+### Sentence-transformer baseline (EPIC F2)
+- Module: `src/lotl_detector/models/text_embedding.py` with CLI `uv run python scripts/train.py --model st`.
+- Actions: encode commands using `sentence-transformers` (default `all-MiniLM-L6-v2`), train a logistic-regression head on the embeddings, and save artifacts: `artifacts/models/st.pkl` (dataclass), `st_classifier.pkl`, plus `st_config.json`/`st_feature_list.json`. Validation metrics (macro/weighted stats) land in `artifacts/eval/st_val_metrics.json`. `make evaluate` now also plots ROC/PR/probability curves and produces `st_threshold_metrics.json` by calling `scripts/plot_eval_curves.py --text-mode sentence`, which re-embeds the validation split with the configured transformer so supervisors can compare recall/precision trade-offs against the TF-IDF and tree baselines.
+
+### Tree + Text ensemble (EPIC F3)
+- Module: `src/lotl_detector/models/ensemble.py` with CLI `uv run python scripts/train.py --model ensemble`.
+- Actions: load existing tree models (GBDT/XGB/RF) plus TF-IDF (and, if available, the MiniLM sentence-transformer model), score train/val splits to obtain base probabilities, and train a logistic-regression meta-classifier that fuses the signals. By default the ensemble picks the highest-priority tree artifact (GBDT → XGB → RF) and the highest-priority text artifact (TF-IDF → MiniLM), but you can pass custom provider metadata if you want another pairing. Artifacts include `artifacts/models/ensemble.pkl`, `ensemble_config.json` (provider metadata, e.g. model names/paths), and `ensemble_feature_list.json`. Validation metrics are written to `artifacts/eval/ensemble_val_metrics.json`. During `make evaluate`, we regenerate ROC/PR/probability plots plus `ensemble_threshold_metrics.json` by re-running the base providers and plotting the ensemble outputs, giving stakeholders a calibrated view of how combining text + tabular (and MiniLM) models improves precision/recall.
 
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).

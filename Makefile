@@ -2,6 +2,7 @@
 
 DATASET := data/dataset.jsonl
 ARTIFACT_DIR := artifacts
+MPL_ENV := MPLBACKEND=Agg MPLCONFIGDIR=.matplotlib-cache
 
 .PHONY: help setup preprocess train evaluate serve test lint
 
@@ -39,14 +40,15 @@ train:
 
 evaluate:
 	$(require-dataset)
+	@mkdir -p .matplotlib-cache
 	@if [ ! -f artifacts/models/gbdt.pkl ]; then \
 		echo "Missing artifacts/models/gbdt.pkl. Train the GBDT model before running 'make evaluate'."; \
 		exit 1; \
 	fi
 	uv run python scripts/calibrate.py
-	uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir $(ARTIFACT_DIR)/reports
+	$(MPL_ENV) uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir $(ARTIFACT_DIR)/reports
 	@if [ -f artifacts/models/xgb.pkl ]; then \
-		uv run python scripts/plot_eval_curves.py \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
 			--model-path artifacts/models/xgb.pkl \
 			--feature-list-path artifacts/models/xgb_feature_list.json \
 			--model-config-path artifacts/models/xgb_config.json \
@@ -56,7 +58,7 @@ evaluate:
 		echo "Skipping XGBoost plots (artifacts/models/xgb.pkl not found)"; \
 	fi
 	@if [ -f artifacts/models/rf.pkl ]; then \
-		uv run python scripts/plot_eval_curves.py \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
 			--model-path artifacts/models/rf.pkl \
 			--feature-list-path artifacts/models/rf_feature_list.json \
 			--model-config-path artifacts/models/rf_config.json \
@@ -64,6 +66,38 @@ evaluate:
 			--output-dir $(ARTIFACT_DIR)/reports ; \
 	else \
 		echo "Skipping RandomForest plots (artifacts/models/rf.pkl not found)"; \
+	fi
+	@if [ -f artifacts/models/text_classifier.pkl ] && [ -f artifacts/models/text_vectorizer.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/text_classifier.pkl \
+			--vectorizer-path artifacts/models/text_vectorizer.pkl \
+			--text-mode tfidf \
+			--prefix text \
+			--output-dir $(ARTIFACT_DIR)/reports ; \
+	else \
+		echo "Skipping Text model plots (text_classifier/vectorizer artifacts not found)"; \
+	fi
+	@if [ -f artifacts/models/st_classifier.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/st_classifier.pkl \
+			--model-config-path artifacts/models/st_config.json \
+			--text-mode sentence \
+			--text-embedder-name all-MiniLM-L6-v2 \
+			--prefix st \
+			--output-dir $(ARTIFACT_DIR)/reports ; \
+	else \
+		echo "Skipping SentenceTransformer plots (st_classifier.pkl not found)"; \
+	fi
+	@if [ -f artifacts/models/ensemble.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble.pkl \
+			--model-config-path artifacts/models/ensemble_config.json \
+			--feature-list-path artifacts/models/ensemble_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble \
+			--output-dir $(ARTIFACT_DIR)/reports ; \
+	else \
+		echo "Skipping Ensemble plots (ensemble.pkl not found)"; \
 	fi
 
 serve:

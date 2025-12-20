@@ -37,9 +37,9 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **E3c. Claude judge comparison** (`eval/judge.py`, `scripts/judge.py`) prompting Claude Sonnet-4.5 to evaluate our outputs vs. ground truth.
 
 ## EPIC F — Text/LLM Component & Ensemble
-- [ ] **F1. TF-IDF + Logistic Regression** (`models/text_encoder.py`) saving vectorizer + classifier artifacts.
-- [ ] **F2. Sentence-transformer embedding model** (MiniLM) + lightweight classifier (optional but planned).
-- [ ] **F3. Hybrid ensemble** (`models/ensemble.py`) combining GBDT + text scores with re-calibrated threshold.
+- [x] **F1. TF-IDF + Logistic Regression** (`src/lotl_detector/models/text.py`) saving vectorizer + classifier artifacts.
+- [x] **F2. Sentence-transformer embedding model** (`src/lotl_detector/models/text_embedding.py`) + lightweight classifier.
+- [x] **F3. Hybrid ensemble** (`src/lotl_detector/models/ensemble.py`) combining GBDT + text scores with re-calibrated threshold.
 
 ## EPIC G — Local LLM Fine-Tune for Classification + Reasoning
 - [ ] **G1. Data prep for LLM** — derive instruction/response pairs from `dataset.jsonl` (train/val only) respecting group splits; structure prompts with event context → label/explanation target JSON.
@@ -48,27 +48,27 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [ ] **G4. Benchmark & cost comparison** — evaluate latency, precision/recall, and cost vs. Claude to ensure ≥2× faster / ≥30× cheaper; document results in REPORT.md plus a dedicated `artifacts/eval/llm_reasoner_metrics.json`.
 
 ## EPIC H — Inference & Export
-- [ ] **G1. Predictor API** (`inference/predictor.py`) with load/predict_one/predict_batch + explanations.
-- [ ] **G2. Batch inference CLI** (`scripts/evaluate.py`) writing `artifacts/eval/preds_test.jsonl`.
-- [ ] **G3. ONNX export** (`inference/export.py`, `scripts/export_onnx.py`) + latency comparison via onnxruntime.
+- [ ] **H1. Predictor API** (`inference/predictor.py`) with load/predict_one/predict_batch + explanations.
+- [ ] **H2. Batch inference CLI** (`scripts/evaluate.py`) writing `artifacts/eval/preds_test.jsonl`.
+- [ ] **H3. ONNX export** (`inference/export.py`, `scripts/export_onnx.py`) + latency comparison via onnxruntime.
 
 ## EPIC I — Training & Cloud Orchestration
-- [ ] **H1. Unified training CLI** (`scripts/train.py`) supporting gbdt/text/ensemble selection.
-- [ ] **H2. Colab notebook** (`notebooks/colab_train.ipynb`) automating preprocess → train → evaluate flow.
-- [ ] **H3. SageMaker tooling** (`sagemaker/train_entry.py`, `scripts/sagemaker_launch.py`) with dry-run launcher.
+- [ ] **I1. Unified training CLI** (`scripts/train.py`) supporting gbdt/text/ensemble selection.
+- [ ] **I2. Colab notebook** (`notebooks/colab_train.ipynb`) automating preprocess → train → evaluate flow.
+- [ ] **I3. SageMaker tooling** (`sagemaker/train_entry.py`, `scripts/sagemaker_launch.py`) with dry-run launcher.
 
 ## EPIC J — Evaluation, Latency, Cost & Failures
-- [ ] **I1. Metrics computation** (`eval/metrics.py`) storing precision/recall/F1/confusion at test time.
-- [ ] **I2. Latency benchmark** (`eval/latency.py`) capturing avg/p50/p95 CPU timings.
-- [ ] **I3. Cost model** (`eval/cost.py`, `cost_comparison.md`) comparing vs Claude baseline.
-- [ ] **I4. Failure analysis & report prep** (`eval/failures.py`, `eval/report.py`, `REPORT.md`) highlighting top FP/FN clusters.
+- [ ] **J1. Metrics computation** (`eval/metrics.py`) storing precision/recall/F1/confusion at test time.
+- [ ] **J2. Latency benchmark** (`eval/latency.py`) capturing avg/p50/p95 CPU timings.
+- [ ] **J3. Cost model** (`eval/cost.py`, `cost_comparison.md`) comparing vs Claude baseline.
+- [ ] **J4. Failure analysis & report prep** (`eval/failures.py`, `eval/report.py`, `REPORT.md`) highlighting top FP/FN clusters.
 
 ## EPIC K — Chainlit Demo & Examples
-- [ ] **J1. Chainlit app** (`app/chainlit_app.py`) wired to Predictor with explanations.
-- [ ] **J2. Demo examples** (`examples/*.json`) + Chainlit quick-load buttons.
+- [ ] **K1. Chainlit app** (`app/chainlit_app.py`) wired to Predictor with explanations.
+- [ ] **K2. Demo examples** (`examples/*.json`) + Chainlit quick-load buttons.
 
 ## EPIC L — Documentation & Presentation
-- [ ] **K1. README refresh** — problem statement, architecture, how-to-run, perf summary.
-- [ ] **K2. REPORT.md** — detailed results, latency, cost, failure modes, limitations.
-- [ ] **K3. LINKEDIN_POST.md** — 150–400 word launch announcement.
-- [ ] **K4. Slides outline** (`slides/outline.md`) covering problem, approach, results, future work.
+- [ ] **L1. README refresh** — problem statement, architecture, how-to-run, perf summary.
+- [ ] **L2. REPORT.md** — detailed results, latency, cost, failure modes, limitations.
+- [ ] **L3. LINKEDIN_POST.md** — 150–400 word launch announcement.
+- [ ] **L4. Slides outline** (`slides/outline.md`) covering problem, approach, results, future work.

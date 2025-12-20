@@ -8,8 +8,11 @@ import typer
 from joblib import dump
 
 from lotl_detector.models.baseline import _load_processed
+from lotl_detector.models.ensemble import EnsembleArtifacts, train_ensemble
 from lotl_detector.models.gbdt import train_gbdt
 from lotl_detector.models.random_forest import train_random_forest
+from lotl_detector.models.text import TextModelArtifacts, train_text_model
+from lotl_detector.models.text_embedding import SentenceEmbeddingArtifacts, train_sentence_embedding_model
 from lotl_detector.models.xgb import train_xgb
 
 
@@ -33,10 +36,31 @@ def _train_rf(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
     return model_obj, feature_names, cfg, report, "rf"
 
 
+def _train_text(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
+    params = {"random_state": seed}
+    model_obj, feature_names, cfg, report, prefix = train_text_model(train_df, val_df, params)
+    return model_obj, feature_names, cfg, report, prefix
+
+
+def _train_sentence(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
+    params = {"random_state": seed}
+    model_obj, feature_names, cfg, report, prefix = train_sentence_embedding_model(train_df, val_df, params)
+    return model_obj, feature_names, cfg, report, prefix
+
+
+def _train_ensemble(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
+    params = {"random_state": seed}
+    model_obj, feature_names, cfg, report, prefix = train_ensemble(train_df, val_df, params)
+    return model_obj, feature_names, cfg, report, prefix
+
+
 TRAINERS = {
     "gbdt": _train_gbdt,
     "xgb": _train_xgb,
     "rf": _train_rf,
+    "text": _train_text,
+    "st": _train_sentence,
+    "ensemble": _train_ensemble,
 }
 
 app = typer.Typer(help="Model training CLI")
@@ -44,7 +68,7 @@ app = typer.Typer(help="Model training CLI")
 
 @app.command()
 def main(
-    model: str = typer.Option("gbdt", "--model", help="Model to train (gbdt)"),
+    model: str = typer.Option("gbdt", "--model", help="Model to train (gbdt|xgb|rf|text|st|ensemble)"),
     processed: Path = typer.Option(Path("artifacts/processed.parquet"), help="Processed parquet"),
     splits: Path = typer.Option(Path("artifacts/splits.json"), help="Splits metadata"),
     output_dir: Path = typer.Option(Path("artifacts/models"), help="Where to store model"),
@@ -67,6 +91,14 @@ def main(
     output_dir.mkdir(parents=True, exist_ok=True)
     model_path = output_dir / f"{prefix}.pkl"
     dump(model_obj, model_path)
+    if prefix == "text" and isinstance(model_obj, TextModelArtifacts):
+        dump(model_obj.vectorizer, output_dir / "text_vectorizer.pkl")
+        dump(model_obj.classifier, output_dir / "text_classifier.pkl")
+    if prefix == "st" and isinstance(model_obj, SentenceEmbeddingArtifacts):
+        dump(model_obj.classifier, output_dir / "st_classifier.pkl")
+    if prefix == "ensemble" and isinstance(model_obj, EnsembleArtifacts):
+        # Classifier already stored via dump(model_obj, model_path); nothing additional required.
+        pass
     (output_dir / f"{prefix}_config.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
     (output_dir / f"{prefix}_feature_list.json").write_text(json.dumps(feature_names, indent=2), encoding="utf-8")
     typer.echo(f"Saved {prefix} model to {model_path}")
