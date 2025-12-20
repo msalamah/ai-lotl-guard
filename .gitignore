@@ -22,5 +22,4 @@ __pycache__/
 artifacts/*
 !artifacts/README.md
 !artifacts/**/.gitkeep
-!artifacts/reports/
 data/processed*/
