@@ -8,7 +8,7 @@ This guide explains how to run the LLM fine-tuning pipeline on AWS SageMaker usi
 - S3 bucket containing the instruction data:
   - `s3://lotl-guard-artifacts/artifacts/llm/train.jsonl`
   - `s3://lotl-guard-artifacts/artifacts/llm/val.jsonl`
-- Container image uploaded to ECR that bundles this repo and dependencies (TinyLlama + transformers/peft). You can build one via `docker build -f aws/Dockerfile.sagemaker -t <repo>:latest .` then push to ECR.
+- Container image uploaded to ECR that bundles this repo and dependencies (TinyLlama + transformers/peft). Use `scripts/build_sagemaker_image.sh <account> <region> <repo>` to build & push automatically.
 
 ## Training Entry Point
 
@@ -24,11 +24,11 @@ Use the launcher CLI:
 ```bash
 uv run python scripts/sagemaker_launch.py \
   --role-arn arn:aws:iam::698284109741:role/SageMakerExecutionRole \
-  --image-uri <your-ecr-image-uri> \
+  --image-uri <account>.dkr.ecr.<region>.amazonaws.com/lotl-guard:latest \
   --input-s3-uri s3://lotl-guard-artifacts/artifacts/llm/ \
   --output-s3-uri s3://lotl-guard-artifacts/sagemaker-output/ \
   --instance-type ml.g5.2xlarge \
-  --hyperparameters '{"EPOCHS":"3","BATCH_SIZE":"4","MAX_LENGTH":"1024"}'
+  --hyperparameters '{"EPOCHS":"4","BATCH_SIZE":"4","MAX_LENGTH":"1024"}'
 ```
 
 This submits a `CreateTrainingJob` request named `lotl-guard-llm-<random>` by default. Monitor the job in the AWS console (SageMaker → Training jobs) or via `aws sagemaker describe-training-job`.
