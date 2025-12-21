@@ -45,7 +45,7 @@ dev = [
 ]
 
 [tool.uv]
-dev-dependencies = ["pytest>=8.3.0", "ruff>=0.6.0", "mypy>=1.11.0"]
+dev-dependencies = ["pytest>=8.3.0", "ruff>=0.6.0", "mypy>=1.11.0", "boto3>=1.35.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -55,7 +55,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 ## EPIC I — Training & Cloud Orchestration
 - [ ] **I1. Unified training CLI** (`scripts/train.py`) supporting gbdt/text/ensemble selection.
 - [ ] **I2. Colab notebook** (`notebooks/colab_train.ipynb`) automating preprocess → train → evaluate flow.
-- [ ] **I3. SageMaker tooling** (`sagemaker/train_entry.py`, `scripts/sagemaker_launch.py`) with dry-run launcher.
+- [x] **I3. SageMaker tooling** (`scripts/sagemaker_train_llm.py`, `scripts/sagemaker_launch.py`, `docs/sagemaker_llm.md`) with dry-run launcher.
 
 ## EPIC J — Evaluation, Latency, Cost & Failures
 - [ ] **J1. Metrics computation** (`eval/metrics.py`) storing precision/recall/F1/confusion at test time.

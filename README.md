@@ -96,6 +96,10 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - Module: `scripts/train_llm.py` + helpers in `src/lotl_detector/llm/`.
 - Actions: load the prepared instruction data, tokenize prompts/responses, and fine-tune a Hugging Face causal LM via LoRA (`peft`) using `transformers.Trainer`. The script defaults to TinyLlama but accepts any base model path. Outputs land in `artifacts/models/llm/` (LoRA adapter, tokenizer snapshot, checkpoints). Detailed steps live in `docs/llm_training.md`.
 
+### SageMaker training (EPIC I3)
+- Module: `scripts/sagemaker_train_llm.py` (entry point) + launcher `scripts/sagemaker_launch.py`.
+- Actions: run the same LoRA training flow on AWS SageMaker. Upload `artifacts/llm/{train,val}.jsonl` to S3, push a Docker image containing this repo to ECR, then execute the launcher CLI to submit a training job with your `SageMakerExecutionRole`. Outputs (adapter/tokenizer/metrics) land in the designated S3 output prefix. See `docs/sagemaker_llm.md` for the full workflow and command examples.
+
 ## Data
 Raw telemetry samples live under `data/`. Downstream preprocessing will produce artifacts under `artifacts/` (ignored by git).
 
