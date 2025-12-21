@@ -1,0 +1,19 @@
+{
+  "providers": [
+    {
+      "name": "xgb",
+      "type": "tree",
+      "model_path": "artifacts/models/xgb.pkl",
+      "config_path": "artifacts/models/xgb_config.json",
+      "feature_list_path": "artifacts/models/xgb_feature_list.json"
+    },
+    {
+      "name": "sentence_text",
+      "type": "sentence",
+      "classifier_path": "artifacts/models/st_classifier.pkl",
+      "config_path": "artifacts/models/st_config.json",
+      "model_name": "all-MiniLM-L6-v2",
+      "batch_size": 32
+    }
+  ]
+}

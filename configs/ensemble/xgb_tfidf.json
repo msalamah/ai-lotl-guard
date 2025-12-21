@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "name": "xgb",
+      "type": "tree",
+      "model_path": "artifacts/models/xgb.pkl",
+      "config_path": "artifacts/models/xgb_config.json",
+      "feature_list_path": "artifacts/models/xgb_feature_list.json"
+    },
+    {
+      "name": "tfidf_text",
+      "type": "tfidf",
+      "classifier_path": "artifacts/models/text_classifier.pkl",
+      "vectorizer_path": "artifacts/models/text_vectorizer.pkl"
+    }
+  ]
+}

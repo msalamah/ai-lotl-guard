@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Dict
 
 import pandas as pd
 import typer
@@ -48,8 +49,11 @@ def _train_sentence(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
     return model_obj, feature_names, cfg, report, prefix
 
 
-def _train_ensemble(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
-    params = {"random_state": seed}
+def _train_ensemble(train_df: pd.DataFrame, val_df: pd.DataFrame, seed_or_params):
+    if isinstance(seed_or_params, dict):
+        params = seed_or_params
+    else:
+        params = {"random_state": seed_or_params}
     model_obj, feature_names, cfg, report, prefix = train_ensemble(train_df, val_df, params)
     return model_obj, feature_names, cfg, report, prefix
 
@@ -74,6 +78,16 @@ def main(
     output_dir: Path = typer.Option(Path("artifacts/models"), help="Where to store model"),
     metrics_dir: Path = typer.Option(Path("artifacts/eval"), help="Where to store metrics"),
     seed: int = typer.Option(13, help="Random seed"),
+    provider_metadata: Path = typer.Option(
+        None,
+        "--provider-metadata",
+        help="Optional JSON describing providers for ensemble training.",
+    ),
+    custom_prefix: str = typer.Option(
+        "",
+        "--custom-prefix",
+        help="Override the artifact prefix (useful for multiple ensemble variants).",
+    ),
 ) -> None:
     model_key = model.lower()
     if model_key not in TRAINERS:
@@ -86,7 +100,19 @@ def main(
     train_df = df[df["row_id"].isin(train_ids)].copy()
     val_df = df[df["row_id"].isin(val_ids)].copy()
 
-    model_obj, feature_names, cfg, report, prefix = trainer(train_df, val_df, seed)
+    trainer_input = seed
+    if model_key == "ensemble":
+        params: Dict[str, object] = {"random_state": seed}
+        if provider_metadata:
+            metadata_payload = json.loads(provider_metadata.read_text(encoding="utf-8"))
+            if isinstance(metadata_payload, dict) and "providers" in metadata_payload:
+                params["provider_metadata"] = metadata_payload["providers"]
+            else:
+                params["provider_metadata"] = metadata_payload
+        trainer_input = params
+    model_obj, feature_names, cfg, report, prefix = trainer(train_df, val_df, trainer_input)
+    if custom_prefix:
+        prefix = custom_prefix.strip()
 
     output_dir.mkdir(parents=True, exist_ok=True)
     model_path = output_dir / f"{prefix}.pkl"

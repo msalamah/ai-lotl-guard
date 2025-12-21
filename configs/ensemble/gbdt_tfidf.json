@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "name": "gbdt",
+      "type": "tree",
+      "model_path": "artifacts/models/gbdt.pkl",
+      "config_path": "artifacts/models/gbdt_config.json",
+      "feature_list_path": "artifacts/models/gbdt_feature_list.json"
+    },
+    {
+      "name": "tfidf_text",
+      "type": "tfidf",
+      "classifier_path": "artifacts/models/text_classifier.pkl",
+      "vectorizer_path": "artifacts/models/text_vectorizer.pkl"
+    }
+  ]
+}

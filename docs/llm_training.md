@@ -45,6 +45,19 @@ Outputs:
 - `artifacts/models/llm/metrics.json` — serialized train/eval metrics returned by `Trainer`.
 - Trainer logs printed to stdout; extend to JSON/CSV logging as needed.
 
+## Inference
+
+After adapters are saved you can run the fine-tuned model locally against the prompts produced in EPIC G1:
+
+```bash
+uv run python scripts/llm_predict.py \
+  --input-path artifacts/llm/val.jsonl \
+  --model-dir artifacts/models/llm \
+  --output-path artifacts/reports/llm_predictions.jsonl
+```
+
+This uses `LocalLLMReasoner` (under `src/lotl_detector/models/llm_inference.py`) to load the tokenizer + adapter, generate a JSON response per sample (label + explanation), and write them to a JSONL file for downstream evaluation.
+
 ## Notes
 
 - The script masks prompt tokens from the loss so only the response segment contributes (`labels=-100` for prompt tokens).

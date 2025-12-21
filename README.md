@@ -18,6 +18,9 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `uv run pytest` — execute the future test suite.
 - `uv run ruff check` — static analysis once rules are defined.
 - `uv run python src/...` — run project modules without activating a virtualenv manually.
+- `uv run python scripts/llm_predict.py --input-path artifacts/llm/val.jsonl --model-dir artifacts/models/llm_local --output-path artifacts/reports/llm_predictions.jsonl` — run the fine-tuned local LLM, emitting predictions and latency stats (`artifacts/reports/llm_predictions_metrics.json`).
+- `uv run python scripts/compare_models.py --models gbdt,xgb,rf,text,st,ensemble_gbdt_tfidf,ensemble_gbdt_st,ensemble_xgb_tfidf,ensemble_xgb_st,ensemble_rf_tfidf,ensemble_rf_st,llm --dataset val` — batch-score all supported detectors, storing per-model comparison JSON + threshold tables plus a merged `artifacts/eval/<split>_comparison_summary.json`.
+- `uv run python scripts/build_dashboard.py --summary artifacts/eval/val_comparison_summary.json --output artifacts/reports/model_dashboard.md` — convert the summary JSON into a Markdown dashboard for stakeholders (tables + key deltas).
 
 ### Make targets
 - `make` — print the available targets and their purpose.
@@ -27,6 +30,54 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `make test` — executes pytest via uv.
 - `make lint` — runs Ruff via uv.
 
+## End-to-end run checklist
+1. **Preprocess & explore**
+   ```bash
+   uv run python scripts/preprocess.py
+   uv run python scripts/data_overview.py  # optional managers report
+   ```
+2. **Train classical detectors (tabular + text)**
+   ```bash
+   uv run python scripts/train.py --model gbdt
+   uv run python scripts/train.py --model xgb
+   uv run python scripts/train.py --model rf
+   uv run python scripts/train.py --model text         # TF-IDF LR
+   uv run python scripts/train.py --model st           # MiniLM LR
+   uv run python scripts/train.py --model ensemble --provider tree=gbdt --provider text=st  # repeat for rf/xgb + tfidf as needed
+   ```
+3. **Calibrate + plot diagnostics**
+   ```bash
+   uv run python scripts/calibrate.py --model gbdt
+   make evaluate  # regenerates ROC/PR/threshold tables for every trained model
+   ```
+4. **LLM data prep + fine-tuning**
+   ```bash
+   uv run python scripts/prepare_llm_data.py --processed artifacts/processed.parquet --splits artifacts/splits.json --output-dir artifacts/llm
+   uv run python scripts/train_llm.py --train-path artifacts/llm/train.jsonl --val-path artifacts/llm/val.jsonl --base-model TinyLlama/TinyLlama-1.1B-Chat-v1.0 --output-dir artifacts/models/llm_local --epochs 3 --batch-size 2 --max-length 1024
+   ```
+5. **LLM inference (captures latency)**  
+   ```bash
+   uv run python scripts/llm_predict.py \
+     --input-path artifacts/llm/val.jsonl \
+     --model-dir artifacts/models/llm_local \
+     --output-path artifacts/reports/llm_predictions.jsonl
+   ```
+6. **Model comparison + dashboard**
+   ```bash
+   uv run python scripts/compare_models.py \
+     --models gbdt,xgb,rf,text,st,ensemble_gbdt_tfidf,ensemble_gbdt_st,ensemble_xgb_tfidf,ensemble_xgb_st,ensemble_rf_tfidf,ensemble_rf_st,llm \
+     --dataset val
+   uv run python scripts/build_dashboard.py \
+     --summary artifacts/eval/val_comparison_summary.json \
+     --output artifacts/reports/model_dashboard.md
+   ```
+7. **(Optional) Claude judge + reporting**
+   ```bash
+   uv run python scripts/llm_explain.py --base-explanations artifacts/reports/gbdt_explanations.jsonl --output artifacts/reports/gbdt_llm_explanations.jsonl
+   uv run python scripts/judge.py --predictions artifacts/reports/gbdt_llm_explanations.jsonl --output artifacts/reports/judge_gbdt.jsonl
+   ```
+
+With these checkpoints you can regenerate every artifact (classical models, local LLM, comparisons, dashboard) and hand off the Markdown report to stakeholders.
 ## Current pipeline status
 
 ### Preprocessing
@@ -68,6 +119,10 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 ### Calibration diagnostics
 - CLI: `uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir artifacts/reports`.
 - Actions: regenerate ROC and Precision-Recall curves plus a probability-distribution histogram colored by the true label, all using the validation split. Each run also emits `{prefix}_threshold_metrics.json`, a table covering thresholds at 0.05 increments (0→1) with precision/recall/TP/FP/TN/FN so supervisors can inspect trade-offs numerically. When `artifacts/models/threshold.json` references the same model, both ROC and PR plots also highlight the calibrated threshold point in addition to the 0.05 grid.
+
+### Multi-model comparison harness
+- CLI: `uv run python scripts/compare_models.py --models gbdt,xgb,rf,text,st,ensemble --dataset val`.
+- Actions: load the processed dataset + split metadata, score each requested model, and record a unified artifact per model (`artifacts/eval/<model>_<split>_comparison.json`) containing accuracy/precision/recall/F1, ROC‑AUC/AP, latency (total + per-sample), and optional cost metadata (supplied via `--cost-config`). Matching threshold tables land in `artifacts/reports/<model>_<split>_threshold_metrics.json`, and an aggregate `artifacts/eval/<split>_comparison_summary.json` bundles the whole run. This is the backbone for EPIC G4’s cost/latency/quality comparison against Claude.
 
 ### Explanation layer (EPIC E3)
 - Module: `src/lotl_detector/inference/explain.py` with CLI `uv run python scripts/explain.py --split test --limit 20`.
