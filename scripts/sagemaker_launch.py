@@ -24,15 +24,31 @@ def _default_hyperparameters() -> Dict[str, str]:
 def main(
     role_arn: str = typer.Option(..., help="SageMaker execution role ARN"),
     image_uri: str = typer.Option(..., help="Container image with project + deps"),
-    input_s3_uri: str = typer.Option(..., help="S3 URI containing train.jsonl and val.jsonl"),
+    train_s3_uri: str = typer.Option(..., help="S3 URI to train.jsonl"),
+    val_s3_uri: str = typer.Option(..., help="S3 URI to val.jsonl"),
     output_s3_uri: str = typer.Option(..., help="S3 URI where SageMaker should store model artifacts"),
     instance_type: str = typer.Option("ml.g5.2xlarge", help="SageMaker instance type"),
     instance_count: int = typer.Option(1, help="Number of instances"),
     hyperparameters: str = typer.Option(None, help="JSON string overriding default hyperparameters"),
     job_name: str = typer.Option(None, help="Optional training job name"),
-    region: str = typer.Option(None, help="AWS region (defaults to CLI config)"),
+    region: str = typer.Option(None, help="AWS region (defaults to CLI config/profile)"),
 ) -> None:
-    train_channel = {"ChannelName": "training", "DataSource": {"S3DataSource": {"S3Uri": input_s3_uri, "S3DataType": "S3Prefix", "S3DataDistributionType": "FullyReplicated"}}}
+    def _channel(name: str, s3_uri: str) -> Dict:
+        return {
+            "ChannelName": name,
+            "DataSource": {
+                "S3DataSource": {
+                    "S3Uri": s3_uri,
+                    "S3DataType": "S3Prefix",
+                    "S3DataDistributionType": "FullyReplicated",
+                }
+            },
+        }
+
+    channels = [
+        _channel("train", train_s3_uri),
+        _channel("val", val_s3_uri),
+    ]
 
     metric_definitions = [
         {"Name": "training:loss", "Regex": "train_loss=([0-9\\.]+)"},
@@ -54,7 +70,7 @@ def main(
             "MetricDefinitions": metric_definitions,
         },
         RoleArn=role_arn,
-        InputDataConfig=[train_channel],
+        InputDataConfig=channels,
         OutputDataConfig={"S3OutputPath": output_s3_uri},
         ResourceConfig={
             "InstanceType": instance_type,
