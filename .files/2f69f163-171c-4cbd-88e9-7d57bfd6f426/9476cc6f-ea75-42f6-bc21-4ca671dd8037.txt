@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T10:14:22Z",
+  "Host": "WIN-DEV-01",
+  "User": "CORP\\alice",
+  "SourceImage": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "CommandLine": "powershell.exe -NoProfile -Command Get-Process | Sort-Object CPU -Descending | Select-Object -First 5",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe"
+}

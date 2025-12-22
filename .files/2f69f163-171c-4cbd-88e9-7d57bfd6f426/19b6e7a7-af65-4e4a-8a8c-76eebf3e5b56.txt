@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T11:02:41Z",
+  "Host": "WIN-USER-07",
+  "User": "NT AUTHORITY\\SYSTEM",
+  "SourceImage": "C:\\Windows\\System32\\svchost.exe",
+  "CommandLine": "svchost.exe -k netsvcs -p -s wuauserv",
+  "ParentImage": "C:\\Windows\\System32\\services.exe"
+}

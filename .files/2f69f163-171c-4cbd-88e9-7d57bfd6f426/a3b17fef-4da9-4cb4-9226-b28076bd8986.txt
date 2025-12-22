@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T17:05:03Z",
+  "Host": "WIN-ENG-09",
+  "User": "CORP\\alex",
+  "SourceImage": "C:\\Windows\\System32\\rundll32.exe",
+  "CommandLine": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication\";eval(\"new ActiveXObject('WScript.Shell').Run('powershell -nop -w hidden')\")",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe"
+}
