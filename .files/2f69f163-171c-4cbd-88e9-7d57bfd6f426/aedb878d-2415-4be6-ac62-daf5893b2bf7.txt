@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T12:33:10Z",
+  "Host": "WIN-DEV-02",
+  "User": "CORP\\bob",
+  "SourceImage": "C:\\Windows\\System32\\curl.exe",
+  "CommandLine": "curl.exe -L https://raw.githubusercontent.com/git/git/master/README.md",
+  "ParentImage": "C:\\Program Files\\Git\\bin\\bash.exe"
+}

