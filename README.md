@@ -19,7 +19,9 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `uv run ruff check` — static analysis once rules are defined.
 - `uv run python src/...` — run project modules without activating a virtualenv manually.
 - `uv run python scripts/llm_predict.py --input-path artifacts/llm/val.jsonl --model-dir artifacts/models/llm_local --output-path artifacts/reports/llm_predictions.jsonl` — run the fine-tuned local LLM, emitting predictions and latency stats (`artifacts/reports/llm_predictions_metrics.json`).
-- `uv run python scripts/compare_models.py --models gbdt,xgb,rf,text,st,ensemble_gbdt_tfidf,ensemble_gbdt_st,ensemble_xgb_tfidf,ensemble_xgb_st,ensemble_rf_tfidf,ensemble_rf_st,llm --dataset val` — batch-score all supported detectors, storing per-model comparison JSON + threshold tables plus a merged `artifacts/eval/<split>_comparison_summary.json`.
+- `uv run python scripts/compare_models.py --models gbdt,xgb,rf,text,st,ensemble_gbdt_tfidf,ensemble_gbdt_st,ensemble_xgb_tfidf,ensemble_xgb_st,ensemble_rf_tfidf,ensemble_rf_st,llm --dataset val --cost-config configs/costs.json` — batch-score all supported detectors, storing per-model comparison JSON + threshold tables plus a merged `artifacts/eval/<split>_comparison_summary.json`.
+- `uv run python scripts/benchmark_g4.py --dataset val --cost-config configs/costs.json` — turn the comparison summary into the EPIC G4 benchmark bundle (`artifacts/eval/llm_reasoner_metrics.json` + `artifacts/reports/cost_comparison.md`) highlighting latency & cost vs Claude.
+- `uv run python scripts/estimate_cloud_costs.py --metrics-path artifacts/eval/llm_reasoner_metrics.json --output-config configs/costs.json` — recompute cost assumptions from measured latency using hosted-instance pricing; rerun the G4 benchmark afterwards to refresh reports.
 - `uv run python scripts/build_dashboard.py --summary artifacts/eval/val_comparison_summary.json --output artifacts/reports/model_dashboard.md` — convert the summary JSON into a Markdown dashboard for stakeholders (tables + key deltas).
 
 ### Make targets
@@ -66,12 +68,20 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
    ```bash
    uv run python scripts/compare_models.py \
      --models gbdt,xgb,rf,text,st,ensemble_gbdt_tfidf,ensemble_gbdt_st,ensemble_xgb_tfidf,ensemble_xgb_st,ensemble_rf_tfidf,ensemble_rf_st,llm \
-     --dataset val
+     --dataset val \
+     --cost-config configs/costs.json
    uv run python scripts/build_dashboard.py \
      --summary artifacts/eval/val_comparison_summary.json \
      --output artifacts/reports/model_dashboard.md
    ```
-7. **(Optional) Claude judge + reporting**
+7. **Cost/latency benchmark (EPIC G4)**
+   ```bash
+   uv run python scripts/benchmark_g4.py \
+     --dataset val \
+     --cost-config configs/costs.json
+   ```
+   Generates `artifacts/eval/llm_reasoner_metrics.json` plus `artifacts/reports/cost_comparison.md` with ≥2× faster / ≥30× cheaper validation against Claude.
+8. **(Optional) Claude judge + reporting**
    ```bash
    uv run python scripts/llm_explain.py --base-explanations artifacts/reports/gbdt_explanations.jsonl --output artifacts/reports/gbdt_llm_explanations.jsonl
    uv run python scripts/judge.py --predictions artifacts/reports/gbdt_llm_explanations.jsonl --output artifacts/reports/judge_gbdt.jsonl

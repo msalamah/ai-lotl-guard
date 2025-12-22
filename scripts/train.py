@@ -17,34 +17,49 @@ from lotl_detector.models.text_embedding import SentenceEmbeddingArtifacts, trai
 from lotl_detector.models.xgb import train_xgb
 
 
-def _train_gbdt(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
-    params = {"random_state": seed}
+def _train_gbdt(train_df: pd.DataFrame, val_df: pd.DataFrame, seed_or_params):
+    if isinstance(seed_or_params, dict):
+        params = seed_or_params
+    else:
+        params = {"random_state": seed_or_params}
     model_obj, feature_names, cat_cols, cfg, report = train_gbdt(train_df, val_df, params)
     cfg["categorical_features"] = cat_cols
     cfg["feature_type"] = "categorical"
     return model_obj, feature_names, cfg, report, "gbdt"
 
 
-def _train_xgb(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
-    params = {"random_state": seed}
+def _train_xgb(train_df: pd.DataFrame, val_df: pd.DataFrame, seed_or_params):
+    if isinstance(seed_or_params, dict):
+        params = seed_or_params
+    else:
+        params = {"random_state": seed_or_params}
     model_obj, feature_names, cfg, report = train_xgb(train_df, val_df, params)
     return model_obj, feature_names, cfg, report, "xgb"
 
 
-def _train_rf(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
-    params = {"random_state": seed}
+def _train_rf(train_df: pd.DataFrame, val_df: pd.DataFrame, seed_or_params):
+    if isinstance(seed_or_params, dict):
+        params = seed_or_params
+    else:
+        params = {"random_state": seed_or_params}
     model_obj, feature_names, cfg, report = train_random_forest(train_df, val_df, params)
     return model_obj, feature_names, cfg, report, "rf"
 
 
-def _train_text(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
-    params = {"random_state": seed}
+def _train_text(train_df: pd.DataFrame, val_df: pd.DataFrame, seed_or_params):
+    if isinstance(seed_or_params, dict):
+        params = seed_or_params
+    else:
+        params = {"random_state": seed_or_params}
     model_obj, feature_names, cfg, report, prefix = train_text_model(train_df, val_df, params)
     return model_obj, feature_names, cfg, report, prefix
 
 
-def _train_sentence(train_df: pd.DataFrame, val_df: pd.DataFrame, seed: int):
-    params = {"random_state": seed}
+def _train_sentence(train_df: pd.DataFrame, val_df: pd.DataFrame, seed_or_params):
+    if isinstance(seed_or_params, dict):
+        params = seed_or_params
+    else:
+        params = {"random_state": seed_or_params}
     model_obj, feature_names, cfg, report, prefix = train_sentence_embedding_model(train_df, val_df, params)
     return model_obj, feature_names, cfg, report, prefix
 
@@ -88,6 +103,11 @@ def main(
         "--custom-prefix",
         help="Override the artifact prefix (useful for multiple ensemble variants).",
     ),
+    param_config: Path | None = typer.Option(
+        None,
+        "--param-config",
+        help="Optional JSON file with hyperparameters to merge into the training parameters.",
+    ),
 ) -> None:
     model_key = model.lower()
     if model_key not in TRAINERS:
@@ -100,7 +120,21 @@ def main(
     train_df = df[df["row_id"].isin(train_ids)].copy()
     val_df = df[df["row_id"].isin(val_ids)].copy()
 
+    param_overrides: Dict[str, object] | None = None
+    if param_config:
+        try:
+            payload = json.loads(param_config.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:  # pragma: no cover
+            raise typer.BadParameter(f"Failed to parse {param_config}: {exc}") from exc
+        if not isinstance(payload, dict):
+            raise typer.BadParameter("param-config must contain a JSON object of model parameters.")
+        param_overrides = payload
+
     trainer_input = seed
+    if param_overrides:
+        trainer_input = param_overrides.copy()
+        trainer_input.setdefault("random_state", seed)
+
     if model_key == "ensemble":
         params: Dict[str, object] = {"random_state": seed}
         if provider_metadata:
@@ -109,6 +143,8 @@ def main(
                 params["provider_metadata"] = metadata_payload["providers"]
             else:
                 params["provider_metadata"] = metadata_payload
+        if param_overrides:
+            params.update(param_overrides)
         trainer_input = params
     model_obj, feature_names, cfg, report, prefix = trainer(train_df, val_df, trainer_input)
     if custom_prefix:

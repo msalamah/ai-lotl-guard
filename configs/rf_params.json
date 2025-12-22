@@ -1,0 +1,5 @@
+{
+  "n_estimators": 500,
+  "max_depth": null,
+  "class_weight": "balanced_subsample"
+}

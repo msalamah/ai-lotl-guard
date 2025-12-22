@@ -17,6 +17,7 @@ DEFAULT_PARAMS: Dict[str, object] = {
     "subsample": 0.8,
     "colsample_bytree": 0.8,
     "random_state": 13,
+    "scale_pos_weight": None,
 }
 
 

@@ -16,6 +16,7 @@ DEFAULT_PARAMS: Dict[str, object] = {
     "min_samples_leaf": 1,
     "random_state": 13,
     "n_jobs": -1,
+    "class_weight": None,
 }
 
 

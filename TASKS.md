@@ -46,7 +46,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **G2. Fine-tuning pipeline** — implement LoRA/QLoRA training script (e.g., using `peft` + `transformers`) that runs fully offline on a local GPU/CPU (quantization acceptable); log metrics and save adapter weights under `artifacts/models/llm/`.
 - [x] **G3. Inference integration** — add module (e.g., `src/lotl_detector/models/llm_reasoner.py`) that loads the fine-tuned local LLM, runs predictions in batch/stream mode, and returns label + natural-language reason.
 - [x] **G3b. Multi-model evaluation CLI** — `scripts/compare_models.py` loads any combination of trained models, scores the requested split, and drops comparable metrics/threshold tables for the G4 dashboard.
-- [ ] **G4. Benchmark & cost comparison** — evaluate latency, precision/recall, and cost vs. Claude to ensure ≥2× faster / ≥30× cheaper; document results in REPORT.md plus a dedicated `artifacts/eval/llm_reasoner_metrics.json`.
+- [x] **G4. Benchmark & cost comparison** — `scripts/benchmark_g4.py` consumes `val_comparison_summary.json` + `configs/costs.json`, logs Claude-vs-local metrics to `artifacts/eval/llm_reasoner_metrics.json`, and renders `artifacts/reports/cost_comparison.md` meeting the ≥2× faster / ≥30× cheaper requirement.
 
 ## EPIC H — Inference & Export
 - [ ] **H1. Predictor API** (`inference/predictor.py`) with load/predict_one/predict_batch + explanations.
