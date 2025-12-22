@@ -39,6 +39,7 @@ def main(
     ),
     processed: Path = typer.Option(Path("artifacts/processed.parquet"), help="Processed dataset"),
     splits: Path = typer.Option(Path("artifacts/splits.json"), help="Split metadata"),
+    dataset: str = typer.Option("val", help="Split to use for plots (train|val|test|final...)"),
     output_dir: Path = typer.Option(Path("artifacts/reports"), help="Directory to store generated plots"),
     prefix: str = typer.Option("gbdt", help="Prefix for saved files"),
     threshold_path: Path | None = typer.Option(
@@ -59,10 +60,12 @@ def main(
     ),
 ) -> None:
     df = _load_processed(processed)
-    val_ids = json.loads(splits.read_text(encoding="utf-8")).get("val_ids", [])
-    if not val_ids:
-        raise typer.BadParameter("Validation IDs missing from splits.json")
-    val_df = df[df["row_id"].isin(val_ids)].copy()
+    split_payload = json.loads(splits.read_text(encoding="utf-8"))
+    key = f"{dataset}_ids"
+    eval_ids = split_payload.get(key)
+    if not eval_ids:
+        raise typer.BadParameter(f"Split '{dataset}' missing from {splits}")
+    val_df = df[df["row_id"].isin(eval_ids)].copy()
 
     mode = text_mode.lower()
     valid_modes = {"none", "tfidf", "sentence", "ensemble"}

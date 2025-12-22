@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html><head><meta charset='utf-8'/>
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.4; }
+table { border-collapse: collapse; margin-bottom: 1rem; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+.plots img { max-width: 300px; margin-right: 8px; margin-bottom: 8px; }
+</style>
+<title>Model Dashboard (val)</title>
+</head><body>
+<h1>Model Comparison Dashboard</h1>
+<p><strong>Dataset:</strong> val<br/>
+<strong>Source:</strong> artifacts/eval/val_comparison_summary.json<br/>
+<small>Generated 2025-12-22T09:08:25.459224 UTC</small></p>
+<table><thead><tr><th>Model</th><th>Accuracy</th><th>P(label=1)</th><th>R(label=1)</th><th>F1(label=1)</th><th>ROC AUC</th><th>Avg Precision</th><th>Latency (ms/sample)</th></tr></thead><tbody>
+<tr><td>gbdt</td><td>0.679</td><td>0.700</td><td>0.824</td><td>0.757</td><td>0.706</td><td>0.813</td><td>1.43</td></tr>
+<tr><td>xgb</td><td>0.607</td><td>0.688</td><td>0.647</td><td>0.667</td><td>0.684</td><td>0.801</td><td>0.53</td></tr>
+<tr><td>rf</td><td>0.714</td><td>0.737</td><td>0.824</td><td>0.778</td><td>0.722</td><td>0.833</td><td>1.76</td></tr>
+<tr><td>text</td><td>0.857</td><td>0.933</td><td>0.824</td><td>0.875</td><td>0.914</td><td>0.947</td><td>0.12</td></tr>
+<tr><td>st</td><td>0.857</td><td>0.933</td><td>0.824</td><td>0.875</td><td>0.888</td><td>0.939</td><td>5.71</td></tr>
+<tr><td>ensemble_gbdt_tfidf</td><td>0.786</td><td>0.824</td><td>0.824</td><td>0.824</td><td>0.840</td><td>0.897</td><td>0.26</td></tr>
+<tr><td>ensemble_gbdt_st</td><td>0.750</td><td>0.778</td><td>0.824</td><td>0.800</td><td>0.834</td><td>0.903</td><td>2.13</td></tr>
+<tr><td>ensemble_xgb_tfidf</td><td>0.786</td><td>0.824</td><td>0.824</td><td>0.824</td><td>0.813</td><td>0.879</td><td>0.64</td></tr>
+<tr><td>ensemble_xgb_st</td><td>0.714</td><td>0.737</td><td>0.824</td><td>0.778</td><td>0.802</td><td>0.883</td><td>2.23</td></tr>
+<tr><td>ensemble_rf_tfidf</td><td>0.821</td><td>0.875</td><td>0.824</td><td>0.848</td><td>0.856</td><td>0.903</td><td>1.83</td></tr>
+<tr><td>ensemble_rf_st</td><td>0.821</td><td>0.875</td><td>0.824</td><td>0.848</td><td>0.834</td><td>0.908</td><td>3.58</td></tr>
+<tr><td>llm</td><td>0.750</td><td>0.750</td><td>0.882</td><td>0.811</td><td>0.714</td><td>0.733</td><td>200.00</td></tr>
+</tbody></table>
+<p><em>Latency values equal to 0 indicate the model reused cached predictions (e.g., the LLM reasoner).</em></p>
+<h2>Cost & latency comparison</h2>
+<table><thead><tr><th>Model</th><th>Precision</th><th>Recall</th><th>Latency (ms)</th><th>Cost $/1M</th><th>Speedup vs Claude</th><th>Savings vs Claude</th></tr></thead><tbody>
+<tr><td>claude</td><td>1.000</td><td>1.000</td><td>1500.00</td><td>1800.0000</td><td>1.000</td><td>1.000</td></tr>
+<tr><td>gbdt</td><td>0.700</td><td>0.824</td><td>1.43</td><td>0.0544</td><td>1049.649</td><td>33063.944</td></tr>
+<tr><td>xgb</td><td>0.688</td><td>0.647</td><td>0.53</td><td>0.0202</td><td>2834.319</td><td>89281.045</td></tr>
+<tr><td>rf</td><td>0.737</td><td>0.824</td><td>1.76</td><td>0.0672</td><td>850.194</td><td>26781.105</td></tr>
+<tr><td>text</td><td>0.933</td><td>0.824</td><td>0.12</td><td>0.0044</td><td>12964.963</td><td>408396.344</td></tr>
+<tr><td>st</td><td>0.933</td><td>0.824</td><td>5.71</td><td>2.2810</td><td>262.518</td><td>789.120</td></tr>
+<tr><td>ensemble_gbdt_tfidf</td><td>0.824</td><td>0.824</td><td>0.26</td><td>0.0101</td><td>5674.654</td><td>178751.585</td></tr>
+<tr><td>ensemble_gbdt_st</td><td>0.778</td><td>0.824</td><td>2.13</td><td>0.8522</td><td>702.653</td><td>2112.148</td></tr>
+<tr><td>ensemble_xgb_tfidf</td><td>0.824</td><td>0.824</td><td>0.64</td><td>0.0244</td><td>2339.187</td><td>73684.379</td></tr>
+<tr><td>ensemble_xgb_st</td><td>0.737</td><td>0.824</td><td>2.23</td><td>0.8918</td><td>671.495</td><td>2018.490</td></tr>
+<tr><td>ensemble_rf_tfidf</td><td>0.875</td><td>0.824</td><td>1.83</td><td>0.0696</td><td>820.702</td><td>25852.109</td></tr>
+<tr><td>ensemble_rf_st</td><td>0.875</td><td>0.824</td><td>3.58</td><td>1.4272</td><td>419.564</td><td>1261.193</td></tr>
+<tr><td>llm</td><td>0.750</td><td>0.882</td><td>200.00</td><td>79.8413</td><td>7.500</td><td>22.545</td></tr>
+</tbody></table>
+<h2>Detailed metrics & threshold analysis</h2>
+<section><h3>gbdt (n=28)</h3>
+<ul>
+<li>### gbdt (n=28)</li>
+<li>- Accuracy: 0.679 | ROC-AUC: 0.706 | Average Precision: 0.813</li>
+<li>- Label=1 P/R/F1: 0.700 / 0.824 / 0.757</li>
+<li>- Macro avg P/R/F1: 0.662 / 0.639 / 0.642</li>
+<li>- Weighted avg P/R/F1: 0.671 / 0.679 / 0.666</li>
+</ul>
+<div class='plots'>
+<img src='gbdt_roc_curve.png' alt='gbdt_roc_curve.png' loading='lazy'/>
+<img src='gbdt_pr_curve.png' alt='gbdt_pr_curve.png' loading='lazy'/>
+<img src='gbdt_prob_distribution.png' alt='gbdt_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.625</td><td>0.882</td><td>15</td><td>9</td><td>2</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.812</td><td>0.765</td><td>13</td><td>3</td><td>8</td><td>4</td></tr>
+<tr><td>0.800</td><td>0.769</td><td>0.588</td><td>10</td><td>3</td><td>8</td><td>7</td></tr>
+<tr><td>0.900</td><td>0.750</td><td>0.529</td><td>9</td><td>3</td><td>8</td><td>8</td></tr>
+</tbody></table>
+</section>
+<section><h3>xgb (n=28)</h3>
+<ul>
+<li>### xgb (n=28)</li>
+<li>- Accuracy: 0.607 | ROC-AUC: 0.684 | Average Precision: 0.801</li>
+<li>- Label=1 P/R/F1: 0.688 / 0.647 / 0.667</li>
+<li>- Macro avg P/R/F1: 0.594 / 0.596 / 0.594</li>
+<li>- Weighted avg P/R/F1: 0.614 / 0.607 / 0.610</li>
+</ul>
+<div class='plots'>
+<img src='xgb_roc_curve.png' alt='xgb_roc_curve.png' loading='lazy'/>
+<img src='xgb_pr_curve.png' alt='xgb_pr_curve.png' loading='lazy'/>
+<img src='xgb_prob_distribution.png' alt='xgb_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.300</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.688</td><td>0.647</td><td>11</td><td>5</td><td>6</td><td>6</td></tr>
+<tr><td>0.600</td><td>0.786</td><td>0.647</td><td>11</td><td>3</td><td>8</td><td>6</td></tr>
+<tr><td>0.700</td><td>0.786</td><td>0.647</td><td>11</td><td>3</td><td>8</td><td>6</td></tr>
+<tr><td>0.800</td><td>0.769</td><td>0.588</td><td>10</td><td>3</td><td>8</td><td>7</td></tr>
+<tr><td>0.900</td><td>0.750</td><td>0.529</td><td>9</td><td>3</td><td>8</td><td>8</td></tr>
+</tbody></table>
+</section>
+<section><h3>rf (n=28)</h3>
+<ul>
+<li>### rf (n=28)</li>
+<li>- Accuracy: 0.714 | ROC-AUC: 0.722 | Average Precision: 0.833</li>
+<li>- Label=1 P/R/F1: 0.737 / 0.824 / 0.778</li>
+<li>- Macro avg P/R/F1: 0.702 / 0.684 / 0.689</li>
+<li>- Weighted avg P/R/F1: 0.709 / 0.714 / 0.708</li>
+</ul>
+<div class='plots'>
+<img src='rf_roc_curve.png' alt='rf_roc_curve.png' loading='lazy'/>
+<img src='rf_pr_curve.png' alt='rf_pr_curve.png' loading='lazy'/>
+<img src='rf_prob_distribution.png' alt='rf_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.593</td><td>0.941</td><td>16</td><td>11</td><td>0</td><td>1</td></tr>
+<tr><td>0.200</td><td>0.682</td><td>0.882</td><td>15</td><td>7</td><td>4</td><td>2</td></tr>
+<tr><td>0.300</td><td>0.667</td><td>0.824</td><td>14</td><td>7</td><td>4</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.812</td><td>0.765</td><td>13</td><td>3</td><td>8</td><td>4</td></tr>
+<tr><td>0.700</td><td>0.800</td><td>0.471</td><td>8</td><td>2</td><td>9</td><td>9</td></tr>
+<tr><td>0.800</td><td>0.800</td><td>0.471</td><td>8</td><td>2</td><td>9</td><td>9</td></tr>
+<tr><td>0.900</td><td>0.875</td><td>0.412</td><td>7</td><td>1</td><td>10</td><td>10</td></tr>
+</tbody></table>
+</section>
+<section><h3>text (n=28)</h3>
+<ul>
+<li>### text (n=28)</li>
+<li>- Accuracy: 0.857 | ROC-AUC: 0.914 | Average Precision: 0.947</li>
+<li>- Label=1 P/R/F1: 0.933 / 0.824 / 0.875</li>
+<li>- Macro avg P/R/F1: 0.851 / 0.866 / 0.854</li>
+<li>- Weighted avg P/R/F1: 0.869 / 0.857 / 0.859</li>
+</ul>
+<div class='plots'>
+<img src='text_roc_curve.png' alt='text_roc_curve.png' loading='lazy'/>
+<img src='text_pr_curve.png' alt='text_pr_curve.png' loading='lazy'/>
+<img src='text_prob_distribution.png' alt='text_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.607</td><td>1.000</td><td>17</td><td>11</td><td>0</td><td>0</td></tr>
+<tr><td>0.200</td><td>0.773</td><td>1.000</td><td>17</td><td>5</td><td>6</td><td>0</td></tr>
+<tr><td>0.300</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.400</td><td>0.938</td><td>0.882</td><td>15</td><td>1</td><td>10</td><td>2</td></tr>
+<tr><td>0.500</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.929</td><td>0.765</td><td>13</td><td>1</td><td>10</td><td>4</td></tr>
+<tr><td>0.700</td><td>0.929</td><td>0.765</td><td>13</td><td>1</td><td>10</td><td>4</td></tr>
+<tr><td>0.800</td><td>1.000</td><td>0.235</td><td>4</td><td>0</td><td>11</td><td>13</td></tr>
+<tr><td>0.900</td><td>0.000</td><td>0.000</td><td>0</td><td>0</td><td>11</td><td>17</td></tr>
+</tbody></table>
+</section>
+<section><h3>st (n=28)</h3>
+<ul>
+<li>### st (n=28)</li>
+<li>- Accuracy: 0.857 | ROC-AUC: 0.888 | Average Precision: 0.939</li>
+<li>- Label=1 P/R/F1: 0.933 / 0.824 / 0.875</li>
+<li>- Macro avg P/R/F1: 0.851 / 0.866 / 0.854</li>
+<li>- Weighted avg P/R/F1: 0.869 / 0.857 / 0.859</li>
+</ul>
+<div class='plots'>
+<img src='st_roc_curve.png' alt='st_roc_curve.png' loading='lazy'/>
+<img src='st_pr_curve.png' alt='st_pr_curve.png' loading='lazy'/>
+<img src='st_prob_distribution.png' alt='st_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.607</td><td>1.000</td><td>17</td><td>11</td><td>0</td><td>0</td></tr>
+<tr><td>0.200</td><td>0.615</td><td>0.941</td><td>16</td><td>10</td><td>1</td><td>1</td></tr>
+<tr><td>0.300</td><td>0.800</td><td>0.941</td><td>16</td><td>4</td><td>7</td><td>1</td></tr>
+<tr><td>0.400</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.929</td><td>0.765</td><td>13</td><td>1</td><td>10</td><td>4</td></tr>
+<tr><td>0.700</td><td>0.923</td><td>0.706</td><td>12</td><td>1</td><td>10</td><td>5</td></tr>
+<tr><td>0.800</td><td>1.000</td><td>0.412</td><td>7</td><td>0</td><td>11</td><td>10</td></tr>
+<tr><td>0.900</td><td>1.000</td><td>0.059</td><td>1</td><td>0</td><td>11</td><td>16</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_gbdt_tfidf (n=28)</h3>
+<ul>
+<li>### ensemble_gbdt_tfidf (n=28)</li>
+<li>- Accuracy: 0.786 | ROC-AUC: 0.840 | Average Precision: 0.897</li>
+<li>- Label=1 P/R/F1: 0.824 / 0.824 / 0.824</li>
+<li>- Macro avg P/R/F1: 0.775 / 0.775 / 0.775</li>
+<li>- Weighted avg P/R/F1: 0.786 / 0.786 / 0.786</li>
+</ul>
+<div class='plots'>
+<img src='ensemble_gbdt_tfidf_roc_curve.png' alt='ensemble_gbdt_tfidf_roc_curve.png' loading='lazy'/>
+<img src='ensemble_gbdt_tfidf_pr_curve.png' alt='ensemble_gbdt_tfidf_pr_curve.png' loading='lazy'/>
+<img src='ensemble_gbdt_tfidf_prob_distribution.png' alt='ensemble_gbdt_tfidf_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.778</td><td>0.824</td><td>14</td><td>4</td><td>7</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.875</td><td>0.824</td><td>14</td><td>2</td><td>9</td><td>3</td></tr>
+<tr><td>0.800</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.900</td><td>0.900</td><td>0.529</td><td>9</td><td>1</td><td>10</td><td>8</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_gbdt_st (n=28)</h3>
+<ul>
+<li>### ensemble_gbdt_st (n=28)</li>
+<li>- Accuracy: 0.750 | ROC-AUC: 0.834 | Average Precision: 0.903</li>
+<li>- Label=1 P/R/F1: 0.778 / 0.824 / 0.800</li>
+<li>- Macro avg P/R/F1: 0.739 / 0.730 / 0.733</li>
+<li>- Weighted avg P/R/F1: 0.747 / 0.750 / 0.748</li>
+</ul>
+<div class='plots'>
+<img src='ensemble_gbdt_st_roc_curve.png' alt='ensemble_gbdt_st_roc_curve.png' loading='lazy'/>
+<img src='ensemble_gbdt_st_pr_curve.png' alt='ensemble_gbdt_st_pr_curve.png' loading='lazy'/>
+<img src='ensemble_gbdt_st_prob_distribution.png' alt='ensemble_gbdt_st_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.200</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.778</td><td>0.824</td><td>14</td><td>4</td><td>7</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.800</td><td>0.875</td><td>0.824</td><td>14</td><td>2</td><td>9</td><td>3</td></tr>
+<tr><td>0.900</td><td>0.929</td><td>0.765</td><td>13</td><td>1</td><td>10</td><td>4</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_xgb_tfidf (n=28)</h3>
+<ul>
+<li>### ensemble_xgb_tfidf (n=28)</li>
+<li>- Accuracy: 0.786 | ROC-AUC: 0.813 | Average Precision: 0.879</li>
+<li>- Label=1 P/R/F1: 0.824 / 0.824 / 0.824</li>
+<li>- Macro avg P/R/F1: 0.775 / 0.775 / 0.775</li>
+<li>- Weighted avg P/R/F1: 0.786 / 0.786 / 0.786</li>
+</ul>
+<div class='plots'>
+<img src='ensemble_xgb_tfidf_roc_curve.png' alt='ensemble_xgb_tfidf_roc_curve.png' loading='lazy'/>
+<img src='ensemble_xgb_tfidf_pr_curve.png' alt='ensemble_xgb_tfidf_pr_curve.png' loading='lazy'/>
+<img src='ensemble_xgb_tfidf_prob_distribution.png' alt='ensemble_xgb_tfidf_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.300</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.800</td><td>0.846</td><td>0.647</td><td>11</td><td>2</td><td>9</td><td>6</td></tr>
+<tr><td>0.900</td><td>0.917</td><td>0.647</td><td>11</td><td>1</td><td>10</td><td>6</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_xgb_st (n=28)</h3>
+<ul>
+<li>### ensemble_xgb_st (n=28)</li>
+<li>- Accuracy: 0.714 | ROC-AUC: 0.802 | Average Precision: 0.883</li>
+<li>- Label=1 P/R/F1: 0.737 / 0.824 / 0.778</li>
+<li>- Macro avg P/R/F1: 0.702 / 0.684 / 0.689</li>
+<li>- Weighted avg P/R/F1: 0.709 / 0.714 / 0.708</li>
+</ul>
+<div class='plots'>
+<img src='ensemble_xgb_st_roc_curve.png' alt='ensemble_xgb_st_roc_curve.png' loading='lazy'/>
+<img src='ensemble_xgb_st_pr_curve.png' alt='ensemble_xgb_st_pr_curve.png' loading='lazy'/>
+<img src='ensemble_xgb_st_prob_distribution.png' alt='ensemble_xgb_st_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.700</td><td>0.824</td><td>14</td><td>6</td><td>5</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.800</td><td>0.786</td><td>0.647</td><td>11</td><td>3</td><td>8</td><td>6</td></tr>
+<tr><td>0.900</td><td>0.917</td><td>0.647</td><td>11</td><td>1</td><td>10</td><td>6</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_rf_tfidf (n=28)</h3>
+<ul>
+<li>### ensemble_rf_tfidf (n=28)</li>
+<li>- Accuracy: 0.821 | ROC-AUC: 0.856 | Average Precision: 0.903</li>
+<li>- Label=1 P/R/F1: 0.875 / 0.824 / 0.848</li>
+<li>- Macro avg P/R/F1: 0.812 / 0.821 / 0.816</li>
+<li>- Weighted avg P/R/F1: 0.826 / 0.821 / 0.823</li>
+</ul>
+<div class='plots'>
+<img src='ensemble_rf_tfidf_roc_curve.png' alt='ensemble_rf_tfidf_roc_curve.png' loading='lazy'/>
+<img src='ensemble_rf_tfidf_pr_curve.png' alt='ensemble_rf_tfidf_pr_curve.png' loading='lazy'/>
+<img src='ensemble_rf_tfidf_prob_distribution.png' alt='ensemble_rf_tfidf_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.714</td><td>0.882</td><td>15</td><td>6</td><td>5</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.300</td><td>0.778</td><td>0.824</td><td>14</td><td>4</td><td>7</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.875</td><td>0.824</td><td>14</td><td>2</td><td>9</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.875</td><td>0.824</td><td>14</td><td>2</td><td>9</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.800</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.900</td><td>0.875</td><td>0.412</td><td>7</td><td>1</td><td>10</td><td>10</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_rf_st (n=28)</h3>
+<ul>
+<li>### ensemble_rf_st (n=28)</li>
+<li>- Accuracy: 0.821 | ROC-AUC: 0.834 | Average Precision: 0.908</li>
+<li>- Label=1 P/R/F1: 0.875 / 0.824 / 0.848</li>
+<li>- Macro avg P/R/F1: 0.812 / 0.821 / 0.816</li>
+<li>- Weighted avg P/R/F1: 0.826 / 0.821 / 0.823</li>
+</ul>
+<div class='plots'>
+<img src='ensemble_rf_st_roc_curve.png' alt='ensemble_rf_st_roc_curve.png' loading='lazy'/>
+<img src='ensemble_rf_st_pr_curve.png' alt='ensemble_rf_st_pr_curve.png' loading='lazy'/>
+<img src='ensemble_rf_st_prob_distribution.png' alt='ensemble_rf_st_prob_distribution.png' loading='lazy'/>
+</div>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.682</td><td>0.882</td><td>15</td><td>7</td><td>4</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.737</td><td>0.824</td><td>14</td><td>5</td><td>6</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.778</td><td>0.824</td><td>14</td><td>4</td><td>7</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.824</td><td>0.824</td><td>14</td><td>3</td><td>8</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.875</td><td>0.824</td><td>14</td><td>2</td><td>9</td><td>3</td></tr>
+<tr><td>0.600</td><td>0.875</td><td>0.824</td><td>14</td><td>2</td><td>9</td><td>3</td></tr>
+<tr><td>0.700</td><td>0.933</td><td>0.824</td><td>14</td><td>1</td><td>10</td><td>3</td></tr>
+<tr><td>0.800</td><td>0.929</td><td>0.765</td><td>13</td><td>1</td><td>10</td><td>4</td></tr>
+<tr><td>0.900</td><td>0.917</td><td>0.647</td><td>11</td><td>1</td><td>10</td><td>6</td></tr>
+</tbody></table>
+</section>
+<section><h3>llm (n=28)</h3>
+<ul>
+<li>### llm (n=28)</li>
+<li>- Accuracy: 0.750 | ROC-AUC: 0.714 | Average Precision: 0.733</li>
+<li>- Label=1 P/R/F1: 0.750 / 0.882 / 0.811</li>
+<li>- Macro avg P/R/F1: 0.750 / 0.714 / 0.721</li>
+<li>- Weighted avg P/R/F1: 0.750 / 0.750 / 0.740</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.300</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.400</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.500</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.600</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.700</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.800</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+<tr><td>0.900</td><td>0.750</td><td>0.882</td><td>15</td><td>5</td><td>6</td><td>2</td></tr>
+</tbody></table>
+</section>
+</body></html>
