@@ -64,6 +64,53 @@ Full details, failure analysis, and next steps live in [`REPORT.md`](REPORT.md).
 - Run `make serve` to launch Chainlit (defaults to `ensemble_rf_tfidf`). Paste raw telemetry JSON or click one of the curated examples under `examples/` (5 benign/malicious scenarios exported from the processed dataset).
 - The UI displays the ensemble score, RandomForest SHAP features + heuristic signals, and a LangChain-powered explanation (Ollama command configurable via `LOCAL_LLM_MODEL` / `LOCAL_LLM_COMMAND`).
 
+## Build the RF + TF‑IDF flagship system (data → metrics → demo)
+
+Follow these steps if you want to reproduce the exact detector-demo combo highlighted in the report.
+
+1. **Preprocess & split once**
+   ```bash
+   make preprocess
+   ```
+   This produces `artifacts/processed.parquet` and the stratified `artifacts/splits.json` that every later step consumes.
+
+2. **Train the base learners**
+   ```bash
+   uv run python scripts/train.py --model text
+   uv run python scripts/train.py --model rf --param-config configs/rf_params.json
+   ```
+   The TF‑IDF logistic regression artifacts (`text.pkl`, `text_vectorizer.pkl`, `text_classifier.pkl`) and the tuned RandomForest bundle (`rf.pkl`, config + feature list) land in `artifacts/models/`.
+
+3. **Fuse them into the production ensemble**
+   ```bash
+   uv run python scripts/train.py \
+     --model ensemble \
+     --provider-metadata configs/ensemble/rf_tfidf.json \
+     --custom-prefix ensemble_rf_tfidf
+   ```
+   The JSON metadata pins the providers to the freshly trained RF + TF‑IDF pair, and the custom prefix keeps the artifacts segregated (`ensemble_rf_tfidf.pkl`, config, feature list, metrics JSON).
+
+4. **Evaluate on the merged test split + regenerate reports**
+   ```bash
+   make compare EVAL_SPLIT=test        # metrics + latency/cost JSON for every model
+   make evaluate EVAL_SPLIT=test       # ROC/PR/probability plots + threshold tables
+   make dashboard EVAL_SPLIT=test      # MODEL_DASHBOARD.md / .html refreshed
+   make cost-report EVAL_SPLIT=test    # Claude vs. local cost summary
+   ```
+   The comparison step rebuilds `artifacts/eval/test_comparison_summary.json`, which feeds both the dashboard and cost analysis. All plots end up under `docs/dashboard/` so GitHub renders them inside `MODEL_DASHBOARD.md`.
+
+5. **(Optional) Regenerate local LLM explanations for that split**
+   ```bash
+   make llm-predict LLM_SPLIT=test
+   ```
+   This runs the fine-tuned TinyLlama judge and stores both the raw predictions and latency metrics so the dashboard and cost sheet can include the qualitative layer.
+
+6. **Launch the Chainlit demo with the new ensemble**
+   ```bash
+   LOCAL_LLM_MODEL=llama3 make serve
+   ```
+   The UI now loads `ensemble_rf_tfidf`, computes RF SHAP values per event, and asks the local Ollama model (override via `LOCAL_LLM_COMMAND` if you run a custom binary) to narrate the reason—exactly what’s shown in the recorded demo.
+
 ## End-to-end run checklist
 1. **Preprocess & explore**
    ```bash
