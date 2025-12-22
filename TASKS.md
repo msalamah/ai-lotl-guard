@@ -49,7 +49,7 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [x] **G4. Benchmark & cost comparison** — `scripts/benchmark_g4.py` consumes `val_comparison_summary.json` + `configs/costs.json`, logs Claude-vs-local metrics to `artifacts/eval/llm_reasoner_metrics.json`, and renders `artifacts/reports/cost_comparison.md` meeting the ≥2× faster / ≥30× cheaper requirement.
 
 ## EPIC H — Inference & Export
-- [ ] **H1. Predictor API** (`inference/predictor.py`) with load/predict_one/predict_batch + explanations.
+- [x] **H1. Predictor API** (`inference/predictor.py`) with load/predict_one/predict_batch + explanations.
 - [ ] **H2. Batch inference CLI** (`scripts/evaluate.py`) writing `artifacts/eval/preds_test.jsonl`.
 - [ ] **H3. ONNX export** (`inference/export.py`, `scripts/export_onnx.py`) + latency comparison via onnxruntime.
 
@@ -65,11 +65,11 @@ Status legend: `TODO` (not started), `IN_PROGRESS`, `DONE`
 - [ ] **J4. Failure analysis & report prep** (`eval/failures.py`, `eval/report.py`, `REPORT.md`) highlighting top FP/FN clusters.
 
 ## EPIC K — Chainlit Demo & Examples
-- [ ] **K1. Chainlit app** (`app/chainlit_app.py`) wired to Predictor with explanations.
-- [ ] **K2. Demo examples** (`examples/*.json`) + Chainlit quick-load buttons.
+- [x] **K1. Chainlit app** (`app/chainlit_app.py`) wired to Predictor with explanations.
+- [x] **K2. Demo examples** (`examples/*.json`) + Chainlit quick-load buttons.
 
 ## EPIC L — Documentation & Presentation
-- [ ] **L1. README refresh** — problem statement, architecture, how-to-run, perf summary.
-- [ ] **L2. REPORT.md** — detailed results, latency, cost, failure modes, limitations.
-- [ ] **L3. LINKEDIN_POST.md** — 150–400 word launch announcement.
+- [x] **L1. README refresh** — problem statement, architecture, how-to-run, perf summary.
+- [x] **L2. REPORT.md** — detailed results, latency, cost, failure modes, limitations.
+- [x] **L3. LINKEDIN_POST.md** — 150–400 word launch announcement.
 - [ ] **L4. Slides outline** (`slides/outline.md`) covering problem, approach, results, future work.

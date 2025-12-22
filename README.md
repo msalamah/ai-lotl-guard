@@ -1,6 +1,24 @@
 # ai-lotl-guard
 
-LotL Guard is a security-analytics project focused on detecting living-off-the-land (LotL) command activity with a modern Python/uv toolchain.
+LotL Guard is a security-analytics project focused on detecting living-off-the-land (LotL) command activity with a modern Python/uv toolchain. All ground-truth labels come from `claude-sonnet-4-5.predicted_label` inside `data/dataset.jsonl`, so every model is judged on its ability to mimic—or beat—the Claude baseline while being cheaper and faster.
+
+## TL;DR results
+
+| Model | Precision (malicious) | Recall (malicious) | Latency / sample | Cost / 1M alerts | Story |
+| --- | --- | --- | --- | --- | --- |
+| TF‑IDF + Logistic Regression | **0.93** | 0.889 | **0.04 ms** | **\$0.004** | Primary detector — 37 000× faster and 400 000× cheaper than Claude with ≥85 % of its recall. |
+| Ensemble (RandomForest + TF‑IDF) | 0.87 | 0.889 | 0.67 ms | \$0.07 | Adds SHAP-friendly tabular context for explanations in the Chainlit UI. |
+| Local LLM reasoner (TinyLlama) | 0.80 | **0.956** | 5 245 ms | \$79.84 | High recall narrative layer, used for qualitative comparisons. |
+| Claude Sonnet 4.5 (customer) | 1.00 | 1.00 | 1 500 ms | \$1 800 | Reference detector / cost baseline. |
+
+Full details, failure analysis, and next steps live in [`REPORT.md`](REPORT.md). Visual dashboards (ROC/PR/threshold tables + cost matrix) are published at [`MODEL_DASHBOARD.md`](MODEL_DASHBOARD.md) and `MODEL_DASHBOARD.html`.
+
+## Key artifacts
+- [`REPORT.md`](REPORT.md) – evaluation report (metrics, latency/cost, failure patterns, limitations, repro steps).
+- [`MODEL_DASHBOARD.md`](MODEL_DASHBOARD.md) / [`MODEL_DASHBOARD.html`](MODEL_DASHBOARD.html) – ROC/PR plots, threshold tables, and aggregated latency/cost comparison.
+- [`docs/reports/cost_comparison_test.md`](docs/reports/cost_comparison_test.md) – Claude vs. local model economics for the merged test split.
+- [`LINKEDIN_POST.md`](LINKEDIN_POST.md) – 150–400 word public-facing summary (title + image brief included).
+- [`docs/RUNBOOK.md`](docs/RUNBOOK.md) – command-by-command reproduction guide.
 
 ## Environment setup
 1. Install [uv](https://docs.astral.sh/uv/) (v0.8+ recommended).
@@ -23,14 +41,28 @@ LotL Guard is a security-analytics project focused on detecting living-off-the-l
 - `uv run python scripts/benchmark_g4.py --dataset val --cost-config configs/costs.json` — turn the comparison summary into the EPIC G4 benchmark bundle (`artifacts/eval/llm_reasoner_metrics.json` + `artifacts/reports/cost_comparison.md`) highlighting latency & cost vs Claude.
 - `uv run python scripts/estimate_cloud_costs.py --metrics-path artifacts/eval/llm_reasoner_metrics.json --output-config configs/costs.json` — recompute cost assumptions from measured latency using hosted-instance pricing; rerun the G4 benchmark afterwards to refresh reports.
 - `uv run python scripts/build_dashboard.py --summary artifacts/eval/val_comparison_summary.json --output artifacts/reports/model_dashboard.md` — convert the summary JSON into a Markdown dashboard for stakeholders (tables + key deltas).
+- `uv run python scripts/error_analysis.py --split test --output artifacts/reports/ensemble_rf_tfidf_error_analysis.md` — compute top FP/FN clusters for the flagship ensemble and emit a Markdown write-up under `artifacts/reports/`.
+- `make serve` — start the Chainlit UI that loads the flagship `ensemble_rf_tfidf` model, shows RandomForest SHAP signals, and asks the local LangChain/Ollama backend to narrate the reason.
 
 ### Make targets
 - `make` — print the available targets and their purpose.
 - `make setup` — run `uv sync`.
-- `make preprocess|train|serve` — placeholder commands that describe the future pipeline entry points.
-- `make evaluate` — runs `scripts/calibrate.py` for the latest GBDT model and, using the **validation split**, regenerates ROC/PR/probability plots **and per-threshold metrics tables** for every trained model (GBDT/XGB/RF/Text/Sentence/Ensemble).
+- `make preprocess` — run the streaming JSONL ingestion + schema validation pipeline.
+- `make serve` — launch the Chainlit demo (`chainlit run src/lotl_detector/app/chainlit_app.py --watch` under the hood).
+- `make evaluate` — regenerates ROC/PR/probability plots **and per-threshold metrics tables** for every trained model (GBDT/XGB/RF/Text/Sentence/Ensemble). Set `EVAL_SPLIT=test` to plot against the merged final split.
 - `make test` — executes pytest via uv.
 - `make lint` — runs Ruff via uv.
+- `make compare`, `make dashboard`, `make cost-report` — rebuild metrics, dashboards (Markdown + HTML), and Claude cost comparison for the requested split.
+- `make llm-predict` — run the local TinyLlama reasoner against any prepared dataset (`LLM_SPLIT=val|test`).
+
+### Dashboards & reports
+- **Evaluation report:** [`REPORT.md`](REPORT.md) captures final metrics, latency/cost, failure analysis, limitations, and the exact commands to reproduce the results.
+- **Final (test) dashboard:** [`MODEL_DASHBOARD.md`](MODEL_DASHBOARD.md) (plots hosted under `docs/dashboard/…`). The HTML twin lives at [`MODEL_DASHBOARD.html`](MODEL_DASHBOARD.html) and includes the Claude vs. local cost/latency table. A standalone copy of that table is at `docs/reports/cost_comparison_test.md`.
+- **LinkedIn-ready summary:** [`LINKEDIN_POST.md`](LINKEDIN_POST.md) provides the 150–400 word story (title + hero image concept) requested in the assignment.
+
+### Interactive demo
+- Run `make serve` to launch Chainlit (defaults to `ensemble_rf_tfidf`). Paste raw telemetry JSON or click one of the curated examples under `examples/` (5 benign/malicious scenarios exported from the processed dataset).
+- The UI displays the ensemble score, RandomForest SHAP features + heuristic signals, and a LangChain-powered explanation (Ollama command configurable via `LOCAL_LLM_MODEL` / `LOCAL_LLM_COMMAND`).
 
 ## End-to-end run checklist
 1. **Preprocess & explore**
@@ -200,3 +232,6 @@ artifacts/
     split_report.md
 ```
 `artifacts/README.md` documents the purpose of each generated file while `.gitkeep` placeholders keep the directories checked in without storing large binaries.
+- **Dashboards & stakeholder reports**
+  - `MODEL_DASHBOARD.md` (test split) — published at the repo root for GitHub preview (with HTML twin).
+  - `docs/reports/cost_comparison_test.md` — Claude vs. local detector cost/latency summary extracted from the dashboard.

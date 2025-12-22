@@ -168,8 +168,11 @@ evaluate:
 	fi
 
 serve:
-	$(require-dataset)
-	$(not-implemented)
+	@if ! command -v chainlit >/dev/null 2>&1; then \
+		echo "Chainlit is not installed in the uv environment. Run 'uv sync' first."; \
+		exit 1; \
+	fi
+	uv run chainlit run src/lotl_detector/app/chainlit_app.py --watch
 
 compare:
 	uv run python scripts/compare_models.py \
