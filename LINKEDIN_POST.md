@@ -1,6 +1,8 @@
 # LinkedIn Post – “How we turned Claude-grade LotL detection into millisecond coffee money”
 
-**Hero image**: [`lotl-guard.png`](lotl-guard.png) — split screen showing (left) a skyscraper-priced Claude invoice (\$1,800 / 1M alerts, 1.5 s latency) and (right) a slim “LotL Guard” dashboard with a 0.04 ms sparkline plus a SHAP-based explanation overlay. Visual cues: PowerShell commands, ROC curve, dollar icons shrinking.
+**Hero image**:
+
+![LotL Guard hero](lotl-guard.png)
 
 ---
 
