@@ -86,6 +86,12 @@ def main(
         show_default=True,
         help="Optional cost benchmark JSON",
     ),
+    plot_dir: Path = typer.Option(
+        Path("artifacts/reports"),
+        "--plot-dir",
+        show_default=True,
+        help="Directory that contains ROC/PR/probability plot PNGs",
+    ),
 ) -> None:
     summary = _load_summary(summary_path)
     dataset = summary.get("dataset", "unknown")
@@ -170,7 +176,7 @@ def main(
 
         plot_infos = []
         for suffix in ["roc_curve", "pr_curve", "prob_distribution"]:
-            info = _plot_info(output_path.parent / f"{model_entry.get('model')}_{suffix}.png")
+            info = _plot_info(plot_dir / f"{model_entry.get('model')}_{suffix}.png")
             if info:
                 plot_infos.append(info)
         if plot_infos:

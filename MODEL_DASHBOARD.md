@@ -30,6 +30,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.693 / 0.665 / 0.666
 - Weighted avg P/R/F1: 0.693 / 0.692 / 0.680
 - Latency: 0.40 ms/sample (total 0.031 s)
+Plots:
+![gbdt_roc_curve.png](docs/dashboard/gbdt_roc_curve.png)
+![gbdt_pr_curve.png](docs/dashboard/gbdt_pr_curve.png)
+![gbdt_prob_distribution.png](docs/dashboard/gbdt_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -49,6 +53,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.698 / 0.696 / 0.697
 - Weighted avg P/R/F1: 0.704 / 0.705 / 0.704
 - Latency: 0.18 ms/sample (total 0.014 s)
+Plots:
+![xgb_roc_curve.png](docs/dashboard/xgb_roc_curve.png)
+![xgb_pr_curve.png](docs/dashboard/xgb_pr_curve.png)
+![xgb_prob_distribution.png](docs/dashboard/xgb_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -68,6 +76,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.771 / 0.752 / 0.756
 - Weighted avg P/R/F1: 0.770 / 0.769 / 0.765
 - Latency: 0.79 ms/sample (total 0.062 s)
+Plots:
+![rf_roc_curve.png](docs/dashboard/rf_roc_curve.png)
+![rf_pr_curve.png](docs/dashboard/rf_pr_curve.png)
+![rf_prob_distribution.png](docs/dashboard/rf_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -87,6 +99,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.894 / 0.899 / 0.896
 - Weighted avg P/R/F1: 0.899 / 0.897 / 0.898
 - Latency: 0.04 ms/sample (total 0.003 s)
+Plots:
+![text_roc_curve.png](docs/dashboard/text_roc_curve.png)
+![text_pr_curve.png](docs/dashboard/text_pr_curve.png)
+![text_prob_distribution.png](docs/dashboard/text_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -106,6 +122,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.894 / 0.899 / 0.896
 - Weighted avg P/R/F1: 0.899 / 0.897 / 0.898
 - Latency: 6.90 ms/sample (total 0.538 s)
+Plots:
+![st_roc_curve.png](docs/dashboard/st_roc_curve.png)
+![st_pr_curve.png](docs/dashboard/st_pr_curve.png)
+![st_prob_distribution.png](docs/dashboard/st_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -125,6 +145,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.693 / 0.665 / 0.666
 - Weighted avg P/R/F1: 0.693 / 0.692 / 0.680
 - Latency: 0.13 ms/sample (total 0.010 s)
+Plots:
+![ensemble_gbdt_tfidf_roc_curve.png](docs/dashboard/ensemble_gbdt_tfidf_roc_curve.png)
+![ensemble_gbdt_tfidf_pr_curve.png](docs/dashboard/ensemble_gbdt_tfidf_pr_curve.png)
+![ensemble_gbdt_tfidf_prob_distribution.png](docs/dashboard/ensemble_gbdt_tfidf_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -144,6 +168,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.693 / 0.665 / 0.666
 - Weighted avg P/R/F1: 0.693 / 0.692 / 0.680
 - Latency: 1.10 ms/sample (total 0.086 s)
+Plots:
+![ensemble_gbdt_st_roc_curve.png](docs/dashboard/ensemble_gbdt_st_roc_curve.png)
+![ensemble_gbdt_st_pr_curve.png](docs/dashboard/ensemble_gbdt_st_pr_curve.png)
+![ensemble_gbdt_st_prob_distribution.png](docs/dashboard/ensemble_gbdt_st_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -163,6 +191,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.800 / 0.778 / 0.783
 - Weighted avg P/R/F1: 0.797 / 0.795 / 0.791
 - Latency: 0.23 ms/sample (total 0.018 s)
+Plots:
+![ensemble_xgb_tfidf_roc_curve.png](docs/dashboard/ensemble_xgb_tfidf_roc_curve.png)
+![ensemble_xgb_tfidf_pr_curve.png](docs/dashboard/ensemble_xgb_tfidf_pr_curve.png)
+![ensemble_xgb_tfidf_prob_distribution.png](docs/dashboard/ensemble_xgb_tfidf_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -182,6 +214,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.771 / 0.752 / 0.756
 - Weighted avg P/R/F1: 0.770 / 0.769 / 0.765
 - Latency: 1.16 ms/sample (total 0.091 s)
+Plots:
+![ensemble_xgb_st_roc_curve.png](docs/dashboard/ensemble_xgb_st_roc_curve.png)
+![ensemble_xgb_st_pr_curve.png](docs/dashboard/ensemble_xgb_st_pr_curve.png)
+![ensemble_xgb_st_prob_distribution.png](docs/dashboard/ensemble_xgb_st_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -201,6 +237,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.857 / 0.854 / 0.855
 - Weighted avg P/R/F1: 0.859 / 0.859 / 0.859
 - Latency: 0.67 ms/sample (total 0.052 s)
+Plots:
+![ensemble_rf_tfidf_roc_curve.png](docs/dashboard/ensemble_rf_tfidf_roc_curve.png)
+![ensemble_rf_tfidf_pr_curve.png](docs/dashboard/ensemble_rf_tfidf_pr_curve.png)
+![ensemble_rf_tfidf_prob_distribution.png](docs/dashboard/ensemble_rf_tfidf_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -220,6 +260,10 @@ _Note: Latency values for models marked as 0 were not measured during this run a
 - Macro avg P/R/F1: 0.845 / 0.838 / 0.841
 - Weighted avg P/R/F1: 0.846 / 0.846 / 0.845
 - Latency: 1.60 ms/sample (total 0.125 s)
+Plots:
+![ensemble_rf_st_roc_curve.png](docs/dashboard/ensemble_rf_st_roc_curve.png)
+![ensemble_rf_st_pr_curve.png](docs/dashboard/ensemble_rf_st_pr_curve.png)
+![ensemble_rf_st_prob_distribution.png](docs/dashboard/ensemble_rf_st_prob_distribution.png)
 
 | Threshold | Precision | Recall | TP | FP | TN | FN |
 | --- | --- | --- | --- | --- | --- | --- |

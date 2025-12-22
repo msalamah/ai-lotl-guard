@@ -11,7 +11,7 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <h1>Model Comparison Dashboard</h1>
 <p><strong>Dataset:</strong> test<br/>
 <strong>Source:</strong> artifacts/eval/test_comparison_summary.json<br/>
-<small>Generated 2025-12-22T09:13:25.577899 UTC</small></p>
+<small>Generated 2025-12-22T09:21:10.121958 UTC</small></p>
 <table><thead><tr><th>Model</th><th>Accuracy</th><th>P(label=1)</th><th>R(label=1)</th><th>F1(label=1)</th><th>ROC AUC</th><th>Avg Precision</th><th>Latency (ms/sample)</th></tr></thead><tbody>
 <tr><td>gbdt</td><td>0.692</td><td>0.691</td><td>0.844</td><td>0.760</td><td>0.723</td><td>0.780</td><td>0.40</td></tr>
 <tr><td>xgb</td><td>0.705</td><td>0.739</td><td>0.756</td><td>0.747</td><td>0.754</td><td>0.841</td><td>0.18</td></tr>
@@ -52,6 +52,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.693 / 0.665 / 0.666</li>
 <li>- Weighted avg P/R/F1: 0.693 / 0.692 / 0.680</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/gbdt_roc_curve.png' alt='gbdt_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/gbdt_pr_curve.png' alt='gbdt_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/gbdt_prob_distribution.png' alt='gbdt_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.672</td><td>0.867</td><td>39</td><td>19</td><td>14</td><td>6</td></tr>
 <tr><td>0.200</td><td>0.667</td><td>0.844</td><td>38</td><td>19</td><td>14</td><td>7</td></tr>
@@ -72,6 +77,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.698 / 0.696 / 0.697</li>
 <li>- Weighted avg P/R/F1: 0.704 / 0.705 / 0.704</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/xgb_roc_curve.png' alt='xgb_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/xgb_pr_curve.png' alt='xgb_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/xgb_prob_distribution.png' alt='xgb_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.667</td><td>0.889</td><td>40</td><td>20</td><td>13</td><td>5</td></tr>
 <tr><td>0.200</td><td>0.672</td><td>0.867</td><td>39</td><td>19</td><td>14</td><td>6</td></tr>
@@ -92,6 +102,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.771 / 0.752 / 0.756</li>
 <li>- Weighted avg P/R/F1: 0.770 / 0.769 / 0.765</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/rf_roc_curve.png' alt='rf_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/rf_pr_curve.png' alt='rf_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/rf_prob_distribution.png' alt='rf_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.594</td><td>0.911</td><td>41</td><td>28</td><td>5</td><td>4</td></tr>
 <tr><td>0.200</td><td>0.609</td><td>0.867</td><td>39</td><td>25</td><td>8</td><td>6</td></tr>
@@ -112,6 +127,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.894 / 0.899 / 0.896</li>
 <li>- Weighted avg P/R/F1: 0.899 / 0.897 / 0.898</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/text_roc_curve.png' alt='text_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/text_pr_curve.png' alt='text_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/text_prob_distribution.png' alt='text_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.577</td><td>1.000</td><td>45</td><td>33</td><td>0</td><td>0</td></tr>
 <tr><td>0.200</td><td>0.682</td><td>1.000</td><td>45</td><td>21</td><td>12</td><td>0</td></tr>
@@ -132,6 +152,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.894 / 0.899 / 0.896</li>
 <li>- Weighted avg P/R/F1: 0.899 / 0.897 / 0.898</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/st_roc_curve.png' alt='st_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/st_pr_curve.png' alt='st_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/st_prob_distribution.png' alt='st_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.577</td><td>1.000</td><td>45</td><td>33</td><td>0</td><td>0</td></tr>
 <tr><td>0.200</td><td>0.620</td><td>0.978</td><td>44</td><td>27</td><td>6</td><td>1</td></tr>
@@ -152,6 +177,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.693 / 0.665 / 0.666</li>
 <li>- Weighted avg P/R/F1: 0.693 / 0.692 / 0.680</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/ensemble_gbdt_tfidf_roc_curve.png' alt='ensemble_gbdt_tfidf_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_gbdt_tfidf_pr_curve.png' alt='ensemble_gbdt_tfidf_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_gbdt_tfidf_prob_distribution.png' alt='ensemble_gbdt_tfidf_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.678</td><td>0.889</td><td>40</td><td>19</td><td>14</td><td>5</td></tr>
 <tr><td>0.200</td><td>0.678</td><td>0.889</td><td>40</td><td>19</td><td>14</td><td>5</td></tr>
@@ -172,6 +202,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.693 / 0.665 / 0.666</li>
 <li>- Weighted avg P/R/F1: 0.693 / 0.692 / 0.680</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/ensemble_gbdt_st_roc_curve.png' alt='ensemble_gbdt_st_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_gbdt_st_pr_curve.png' alt='ensemble_gbdt_st_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_gbdt_st_prob_distribution.png' alt='ensemble_gbdt_st_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.678</td><td>0.889</td><td>40</td><td>19</td><td>14</td><td>5</td></tr>
 <tr><td>0.200</td><td>0.672</td><td>0.867</td><td>39</td><td>19</td><td>14</td><td>6</td></tr>
@@ -192,6 +227,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.800 / 0.778 / 0.783</li>
 <li>- Weighted avg P/R/F1: 0.797 / 0.795 / 0.791</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/ensemble_xgb_tfidf_roc_curve.png' alt='ensemble_xgb_tfidf_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_xgb_tfidf_pr_curve.png' alt='ensemble_xgb_tfidf_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_xgb_tfidf_prob_distribution.png' alt='ensemble_xgb_tfidf_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.636</td><td>0.933</td><td>42</td><td>24</td><td>9</td><td>3</td></tr>
 <tr><td>0.200</td><td>0.695</td><td>0.911</td><td>41</td><td>18</td><td>15</td><td>4</td></tr>
@@ -212,6 +252,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.771 / 0.752 / 0.756</li>
 <li>- Weighted avg P/R/F1: 0.770 / 0.769 / 0.765</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/ensemble_xgb_st_roc_curve.png' alt='ensemble_xgb_st_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_xgb_st_pr_curve.png' alt='ensemble_xgb_st_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_xgb_st_prob_distribution.png' alt='ensemble_xgb_st_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.623</td><td>0.956</td><td>43</td><td>26</td><td>7</td><td>2</td></tr>
 <tr><td>0.200</td><td>0.689</td><td>0.933</td><td>42</td><td>19</td><td>14</td><td>3</td></tr>
@@ -232,6 +277,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.857 / 0.854 / 0.855</li>
 <li>- Weighted avg P/R/F1: 0.859 / 0.859 / 0.859</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/ensemble_rf_tfidf_roc_curve.png' alt='ensemble_rf_tfidf_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_rf_tfidf_pr_curve.png' alt='ensemble_rf_tfidf_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_rf_tfidf_prob_distribution.png' alt='ensemble_rf_tfidf_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.618</td><td>0.933</td><td>42</td><td>26</td><td>7</td><td>3</td></tr>
 <tr><td>0.200</td><td>0.712</td><td>0.933</td><td>42</td><td>17</td><td>16</td><td>3</td></tr>
@@ -252,6 +302,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
 <li>- Macro avg P/R/F1: 0.845 / 0.838 / 0.841</li>
 <li>- Weighted avg P/R/F1: 0.846 / 0.846 / 0.845</li>
 </ul>
+<div class='plots'>
+<img src='docs/dashboard/ensemble_rf_st_roc_curve.png' alt='ensemble_rf_st_roc_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_rf_st_pr_curve.png' alt='ensemble_rf_st_pr_curve.png' loading='lazy'/>
+<img src='docs/dashboard/ensemble_rf_st_prob_distribution.png' alt='ensemble_rf_st_prob_distribution.png' loading='lazy'/>
+</div>
 <table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
 <tr><td>0.100</td><td>0.606</td><td>0.956</td><td>43</td><td>28</td><td>5</td><td>2</td></tr>
 <tr><td>0.200</td><td>0.656</td><td>0.933</td><td>42</td><td>22</td><td>11</td><td>3</td></tr>
