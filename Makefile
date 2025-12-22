@@ -11,6 +11,7 @@ LLM_PRED_PATH := $(ARTIFACT_DIR)/reports/llm_predictions_$(EVAL_SPLIT).jsonl
 LLM_METRICS_PATH := $(ARTIFACT_DIR)/reports/llm_predictions_$(EVAL_SPLIT)_metrics.json
 SUMMARY_PATH ?= $(ARTIFACT_DIR)/eval/$(EVAL_SPLIT)_comparison_summary.json
 DASHBOARD_PATH ?= $(ARTIFACT_DIR)/reports/model_dashboard_$(EVAL_SPLIT).md
+DASHBOARD_HTML_PATH ?= $(ARTIFACT_DIR)/reports/model_dashboard_$(EVAL_SPLIT).html
 COST_JSON ?= $(ARTIFACT_DIR)/eval/llm_reasoner_metrics_$(EVAL_SPLIT).json
 COST_REPORT ?= $(ARTIFACT_DIR)/reports/cost_comparison_$(EVAL_SPLIT).md
 
@@ -55,21 +56,17 @@ train:
 evaluate:
 	$(require-dataset)
 	@mkdir -p .matplotlib-cache
-	@if [ ! -f artifacts/models/gbdt.pkl ]; then \
-		echo "Missing artifacts/models/gbdt.pkl. Train the GBDT model before running 'make evaluate'."; \
-		exit 1; \
+	@if [ -f artifacts/models/gbdt.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir $(ARTIFACT_DIR)/reports --dataset $(EVAL_SPLIT) ; \
 	fi
-	uv run python scripts/calibrate.py
-	$(MPL_ENV) uv run python scripts/plot_eval_curves.py --prefix gbdt --output-dir $(ARTIFACT_DIR)/reports
 	@if [ -f artifacts/models/xgb.pkl ]; then \
 		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
 			--model-path artifacts/models/xgb.pkl \
 			--feature-list-path artifacts/models/xgb_feature_list.json \
 			--model-config-path artifacts/models/xgb_config.json \
 			--prefix xgb \
-			--output-dir $(ARTIFACT_DIR)/reports ; \
-	else \
-		echo "Skipping XGBoost plots (artifacts/models/xgb.pkl not found)"; \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
 	fi
 	@if [ -f artifacts/models/rf.pkl ]; then \
 		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
@@ -77,9 +74,8 @@ evaluate:
 			--feature-list-path artifacts/models/rf_feature_list.json \
 			--model-config-path artifacts/models/rf_config.json \
 			--prefix rf \
-			--output-dir $(ARTIFACT_DIR)/reports ; \
-	else \
-		echo "Skipping RandomForest plots (artifacts/models/rf.pkl not found)"; \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
 	fi
 	@if [ -f artifacts/models/text_classifier.pkl ] && [ -f artifacts/models/text_vectorizer.pkl ]; then \
 		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
@@ -87,9 +83,8 @@ evaluate:
 			--vectorizer-path artifacts/models/text_vectorizer.pkl \
 			--text-mode tfidf \
 			--prefix text \
-			--output-dir $(ARTIFACT_DIR)/reports ; \
-	else \
-		echo "Skipping Text model plots (text_classifier/vectorizer artifacts not found)"; \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
 	fi
 	@if [ -f artifacts/models/st_classifier.pkl ]; then \
 		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
@@ -98,9 +93,8 @@ evaluate:
 			--text-mode sentence \
 			--text-embedder-name all-MiniLM-L6-v2 \
 			--prefix st \
-			--output-dir $(ARTIFACT_DIR)/reports ; \
-	else \
-		echo "Skipping SentenceTransformer plots (st_classifier.pkl not found)"; \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
 	fi
 	@if [ -f artifacts/models/ensemble.pkl ]; then \
 		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
@@ -109,14 +103,76 @@ evaluate:
 			--feature-list-path artifacts/models/ensemble_feature_list.json \
 			--text-mode ensemble \
 			--prefix ensemble \
-			--output-dir $(ARTIFACT_DIR)/reports ; \
-	else \
-		echo "Skipping Ensemble plots (ensemble.pkl not found)"; \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
+	fi
+	@if [ -f artifacts/models/ensemble_gbdt_st.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble_gbdt_st.pkl \
+			--model-config-path artifacts/models/ensemble_gbdt_st_config.json \
+			--feature-list-path artifacts/models/ensemble_gbdt_st_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble_gbdt_st \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
+	fi
+	@if [ -f artifacts/models/ensemble_xgb_st.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble_xgb_st.pkl \
+			--model-config-path artifacts/models/ensemble_xgb_st_config.json \
+			--feature-list-path artifacts/models/ensemble_xgb_st_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble_xgb_st \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
+	fi
+	@if [ -f artifacts/models/ensemble_rf_st.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble_rf_st.pkl \
+			--model-config-path artifacts/models/ensemble_rf_st_config.json \
+			--feature-list-path artifacts/models/ensemble_rf_st_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble_rf_st \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
+	fi
+	@if [ -f artifacts/models/ensemble_gbdt_tfidf.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble_gbdt_tfidf.pkl \
+			--model-config-path artifacts/models/ensemble_gbdt_tfidf_config.json \
+			--feature-list-path artifacts/models/ensemble_gbdt_tfidf_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble_gbdt_tfidf \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
+	fi
+	@if [ -f artifacts/models/ensemble_xgb_tfidf.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble_xgb_tfidf.pkl \
+			--model-config-path artifacts/models/ensemble_xgb_tfidf_config.json \
+			--feature-list-path artifacts/models/ensemble_xgb_tfidf_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble_xgb_tfidf \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
+	fi
+	@if [ -f artifacts/models/ensemble_rf_tfidf.pkl ]; then \
+		$(MPL_ENV) uv run python scripts/plot_eval_curves.py \
+			--model-path artifacts/models/ensemble_rf_tfidf.pkl \
+			--model-config-path artifacts/models/ensemble_rf_tfidf_config.json \
+			--feature-list-path artifacts/models/ensemble_rf_tfidf_feature_list.json \
+			--text-mode ensemble \
+			--prefix ensemble_rf_tfidf \
+			--output-dir $(ARTIFACT_DIR)/reports \
+			--dataset $(EVAL_SPLIT) ; \
 	fi
 
 serve:
-	$(require-dataset)
-	$(not-implemented)
+	@if ! command -v chainlit >/dev/null 2>&1; then \
+		echo "Chainlit is not installed in the uv environment. Run 'uv sync' first."; \
+		exit 1; \
+	fi
+	uv run chainlit run src/lotl_detector/app/chainlit_app.py --watch
 
 compare:
 	uv run python scripts/compare_models.py \
@@ -138,7 +194,9 @@ llm-predict:
 dashboard:
 	uv run python scripts/build_dashboard.py \
 		--summary-path $(SUMMARY_PATH) \
-		--output-path $(DASHBOARD_PATH)
+		--output-path $(DASHBOARD_PATH) \
+		--html-output-path $(DASHBOARD_HTML_PATH) \
+		--cost-json $(COST_JSON)
 
 cost-report:
 	uv run python scripts/benchmark_g4.py \

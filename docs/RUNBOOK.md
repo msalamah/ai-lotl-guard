@@ -71,7 +71,23 @@ Outputs:
 - `artifacts/reports/{model}_pr_curve.png`
 - `artifacts/reports/{model}_prob_distribution.png`
 
-## 7. Explanations
+After generating curves, build the comparison dashboard + cost report for the desired split (validation by default, or `EVAL_SPLIT=test` for the merged final set):
+```bash
+make compare EVAL_SPLIT=test
+make dashboard EVAL_SPLIT=test   # writes MODEL_DASHBOARD.{md,html} + docs/dashboard copies
+make cost-report EVAL_SPLIT=test
+```
+
+## 7. Chainlit demo (interactive inference)
+Launch the UI (requires `chainlit` + LangChain/Ollama dependencies, already declared in `pyproject.toml`). This loads the `ensemble_rf_tfidf` artifacts, exposes curated examples from `examples/`, and calls the LangChain-backed LLM explainer:
+```bash
+make serve
+```
+Environment knobs:
+- `CHAINLIT_MODEL` / `CHAINLIT_MODEL_DIR` — pick a different ensemble artifact bundle.
+- `LOCAL_LLM_MODEL` or `LOCAL_LLM_COMMAND` — how `LLMReasoner` should query your local model (Ollama by default).
+
+## 8. Explanations
 Generate human-readable explanations for the calibrated GBDT on any split:
 ```bash
 uv run python scripts/explain.py --split test --limit 20 --top-k 4
@@ -90,7 +106,7 @@ uv run python scripts/explain.py \
 ```
 Add `--no-enable-shap` if you only need heuristic signals without SHAP.
 
-## 8. LLM explanations & Claude judge
+## 9. LLM explanations & Claude judge
 
 ### LLM augmentation
 Transform structured explanations into natural language blurbs using your local Ollama model (set `LOCAL_LLM_MODEL=llama3`; optionally `OLLAMA_BASE_URL` if the server is remote). If you prefer a custom command pipeline, keep `LOCAL_LLM_COMMAND` as a fallback.
@@ -111,13 +127,13 @@ ANTHROPIC_API_KEY=... uv run python scripts/judge.py \
 ```
 Claude responds with agreement, justification, and suggested improvements per sample.
 
-## 9. Testing & linting
+## 10. Testing & linting
 ```bash
 make test
 make lint
 ```
 
-## 10. Summary of key artifacts
+## 11. Summary of key artifacts
 - Processed data: `artifacts/processed.parquet`
 - Splits metadata: `artifacts/splits.json`
 - Models/configs: `artifacts/models/`
