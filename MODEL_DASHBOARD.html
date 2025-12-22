@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html><head><meta charset='utf-8'/>
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.4; }
+table { border-collapse: collapse; margin-bottom: 1rem; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+.plots img { max-width: 300px; margin-right: 8px; margin-bottom: 8px; }
+</style>
+<title>Model Dashboard (test)</title>
+</head><body>
+<h1>Model Comparison Dashboard</h1>
+<p><strong>Dataset:</strong> test<br/>
+<strong>Source:</strong> artifacts/eval/test_comparison_summary.json<br/>
+<small>Generated 2025-12-22T09:13:25.577899 UTC</small></p>
+<table><thead><tr><th>Model</th><th>Accuracy</th><th>P(label=1)</th><th>R(label=1)</th><th>F1(label=1)</th><th>ROC AUC</th><th>Avg Precision</th><th>Latency (ms/sample)</th></tr></thead><tbody>
+<tr><td>gbdt</td><td>0.692</td><td>0.691</td><td>0.844</td><td>0.760</td><td>0.723</td><td>0.780</td><td>0.40</td></tr>
+<tr><td>xgb</td><td>0.705</td><td>0.739</td><td>0.756</td><td>0.747</td><td>0.754</td><td>0.841</td><td>0.18</td></tr>
+<tr><td>rf</td><td>0.769</td><td>0.765</td><td>0.867</td><td>0.812</td><td>0.814</td><td>0.884</td><td>0.79</td></tr>
+<tr><td>text</td><td>0.897</td><td>0.930</td><td>0.889</td><td>0.909</td><td>0.931</td><td>0.951</td><td>0.04</td></tr>
+<tr><td>st</td><td>0.897</td><td>0.930</td><td>0.889</td><td>0.909</td><td>0.921</td><td>0.946</td><td>6.90</td></tr>
+<tr><td>ensemble_gbdt_tfidf</td><td>0.692</td><td>0.691</td><td>0.844</td><td>0.760</td><td>0.859</td><td>0.906</td><td>0.13</td></tr>
+<tr><td>ensemble_gbdt_st</td><td>0.692</td><td>0.691</td><td>0.844</td><td>0.760</td><td>0.860</td><td>0.907</td><td>1.10</td></tr>
+<tr><td>ensemble_xgb_tfidf</td><td>0.795</td><td>0.784</td><td>0.889</td><td>0.833</td><td>0.852</td><td>0.886</td><td>0.23</td></tr>
+<tr><td>ensemble_xgb_st</td><td>0.769</td><td>0.765</td><td>0.867</td><td>0.812</td><td>0.848</td><td>0.889</td><td>1.16</td></tr>
+<tr><td>ensemble_rf_tfidf</td><td>0.859</td><td>0.870</td><td>0.889</td><td>0.879</td><td>0.879</td><td>0.911</td><td>0.67</td></tr>
+<tr><td>ensemble_rf_st</td><td>0.846</td><td>0.851</td><td>0.889</td><td>0.870</td><td>0.866</td><td>0.901</td><td>1.60</td></tr>
+<tr><td>llm</td><td>0.833</td><td>0.796</td><td>0.956</td><td>0.869</td><td>0.811</td><td>0.787</td><td>5245.23</td></tr>
+</tbody></table>
+<p><em>Latency values equal to 0 indicate the model reused cached predictions (e.g., the LLM reasoner).</em></p>
+<h2>Cost & latency comparison</h2>
+<table><thead><tr><th>Model</th><th>Precision</th><th>Recall</th><th>Latency (ms)</th><th>Cost $/1M</th><th>Speedup vs Claude</th><th>Savings vs Claude</th></tr></thead><tbody>
+<tr><td>claude</td><td>1.000</td><td>1.000</td><td>1500.00</td><td>1800.0000</td><td>1.000</td><td>1.000</td></tr>
+<tr><td>gbdt</td><td>0.691</td><td>0.844</td><td>0.40</td><td>0.0544</td><td>3758.966</td><td>33063.944</td></tr>
+<tr><td>xgb</td><td>0.739</td><td>0.756</td><td>0.18</td><td>0.0202</td><td>8215.499</td><td>89281.045</td></tr>
+<tr><td>rf</td><td>0.765</td><td>0.867</td><td>0.79</td><td>0.0672</td><td>1887.892</td><td>26781.105</td></tr>
+<tr><td>text</td><td>0.930</td><td>0.889</td><td>0.04</td><td>0.0044</td><td>36922.598</td><td>408396.344</td></tr>
+<tr><td>st</td><td>0.930</td><td>0.889</td><td>6.90</td><td>2.2810</td><td>217.383</td><td>789.120</td></tr>
+<tr><td>ensemble_gbdt_tfidf</td><td>0.691</td><td>0.844</td><td>0.13</td><td>0.0101</td><td>11794.701</td><td>178751.585</td></tr>
+<tr><td>ensemble_gbdt_st</td><td>0.691</td><td>0.844</td><td>1.10</td><td>0.8522</td><td>1363.678</td><td>2112.148</td></tr>
+<tr><td>ensemble_xgb_tfidf</td><td>0.784</td><td>0.889</td><td>0.23</td><td>0.0244</td><td>6650.987</td><td>73684.379</td></tr>
+<tr><td>ensemble_xgb_st</td><td>0.765</td><td>0.867</td><td>1.16</td><td>0.8918</td><td>1290.751</td><td>2018.490</td></tr>
+<tr><td>ensemble_rf_tfidf</td><td>0.870</td><td>0.889</td><td>0.67</td><td>0.0696</td><td>2244.915</td><td>25852.109</td></tr>
+<tr><td>ensemble_rf_st</td><td>0.851</td><td>0.889</td><td>1.60</td><td>1.4272</td><td>935.474</td><td>1261.193</td></tr>
+<tr><td>llm</td><td>0.796</td><td>0.956</td><td>5245.23</td><td>79.8413</td><td>0.286</td><td>22.545</td></tr>
+</tbody></table>
+<h2>Detailed metrics & threshold analysis</h2>
+<section><h3>gbdt (n=78)</h3>
+<ul>
+<li>### gbdt (n=78)</li>
+<li>- Accuracy: 0.692 | ROC-AUC: 0.723 | Average Precision: 0.780</li>
+<li>- Label=1 P/R/F1: 0.691 / 0.844 / 0.760</li>
+<li>- Macro avg P/R/F1: 0.693 / 0.665 / 0.666</li>
+<li>- Weighted avg P/R/F1: 0.693 / 0.692 / 0.680</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.672</td><td>0.867</td><td>39</td><td>19</td><td>14</td><td>6</td></tr>
+<tr><td>0.200</td><td>0.667</td><td>0.844</td><td>38</td><td>19</td><td>14</td><td>7</td></tr>
+<tr><td>0.300</td><td>0.667</td><td>0.844</td><td>38</td><td>19</td><td>14</td><td>7</td></tr>
+<tr><td>0.400</td><td>0.679</td><td>0.844</td><td>38</td><td>18</td><td>15</td><td>7</td></tr>
+<tr><td>0.500</td><td>0.691</td><td>0.844</td><td>38</td><td>17</td><td>16</td><td>7</td></tr>
+<tr><td>0.600</td><td>0.691</td><td>0.844</td><td>38</td><td>17</td><td>16</td><td>7</td></tr>
+<tr><td>0.700</td><td>0.760</td><td>0.844</td><td>38</td><td>12</td><td>21</td><td>7</td></tr>
+<tr><td>0.800</td><td>0.760</td><td>0.844</td><td>38</td><td>12</td><td>21</td><td>7</td></tr>
+<tr><td>0.900</td><td>0.727</td><td>0.711</td><td>32</td><td>12</td><td>21</td><td>13</td></tr>
+</tbody></table>
+</section>
+<section><h3>xgb (n=78)</h3>
+<ul>
+<li>### xgb (n=78)</li>
+<li>- Accuracy: 0.705 | ROC-AUC: 0.754 | Average Precision: 0.841</li>
+<li>- Label=1 P/R/F1: 0.739 / 0.756 / 0.747</li>
+<li>- Macro avg P/R/F1: 0.698 / 0.696 / 0.697</li>
+<li>- Weighted avg P/R/F1: 0.704 / 0.705 / 0.704</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.667</td><td>0.889</td><td>40</td><td>20</td><td>13</td><td>5</td></tr>
+<tr><td>0.200</td><td>0.672</td><td>0.867</td><td>39</td><td>19</td><td>14</td><td>6</td></tr>
+<tr><td>0.300</td><td>0.660</td><td>0.778</td><td>35</td><td>18</td><td>15</td><td>10</td></tr>
+<tr><td>0.400</td><td>0.667</td><td>0.756</td><td>34</td><td>17</td><td>16</td><td>11</td></tr>
+<tr><td>0.500</td><td>0.739</td><td>0.756</td><td>34</td><td>12</td><td>21</td><td>11</td></tr>
+<tr><td>0.600</td><td>0.733</td><td>0.733</td><td>33</td><td>12</td><td>21</td><td>12</td></tr>
+<tr><td>0.700</td><td>0.733</td><td>0.733</td><td>33</td><td>12</td><td>21</td><td>12</td></tr>
+<tr><td>0.800</td><td>0.750</td><td>0.733</td><td>33</td><td>11</td><td>22</td><td>12</td></tr>
+<tr><td>0.900</td><td>0.780</td><td>0.711</td><td>32</td><td>9</td><td>24</td><td>13</td></tr>
+</tbody></table>
+</section>
+<section><h3>rf (n=78)</h3>
+<ul>
+<li>### rf (n=78)</li>
+<li>- Accuracy: 0.769 | ROC-AUC: 0.814 | Average Precision: 0.884</li>
+<li>- Label=1 P/R/F1: 0.765 / 0.867 / 0.812</li>
+<li>- Macro avg P/R/F1: 0.771 / 0.752 / 0.756</li>
+<li>- Weighted avg P/R/F1: 0.770 / 0.769 / 0.765</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.594</td><td>0.911</td><td>41</td><td>28</td><td>5</td><td>4</td></tr>
+<tr><td>0.200</td><td>0.609</td><td>0.867</td><td>39</td><td>25</td><td>8</td><td>6</td></tr>
+<tr><td>0.300</td><td>0.661</td><td>0.867</td><td>39</td><td>20</td><td>13</td><td>6</td></tr>
+<tr><td>0.400</td><td>0.684</td><td>0.867</td><td>39</td><td>18</td><td>15</td><td>6</td></tr>
+<tr><td>0.500</td><td>0.765</td><td>0.867</td><td>39</td><td>12</td><td>21</td><td>6</td></tr>
+<tr><td>0.600</td><td>0.791</td><td>0.756</td><td>34</td><td>9</td><td>24</td><td>11</td></tr>
+<tr><td>0.700</td><td>0.846</td><td>0.733</td><td>33</td><td>6</td><td>27</td><td>12</td></tr>
+<tr><td>0.800</td><td>0.903</td><td>0.622</td><td>28</td><td>3</td><td>30</td><td>17</td></tr>
+<tr><td>0.900</td><td>0.889</td><td>0.533</td><td>24</td><td>3</td><td>30</td><td>21</td></tr>
+</tbody></table>
+</section>
+<section><h3>text (n=78)</h3>
+<ul>
+<li>### text (n=78)</li>
+<li>- Accuracy: 0.897 | ROC-AUC: 0.931 | Average Precision: 0.951</li>
+<li>- Label=1 P/R/F1: 0.930 / 0.889 / 0.909</li>
+<li>- Macro avg P/R/F1: 0.894 / 0.899 / 0.896</li>
+<li>- Weighted avg P/R/F1: 0.899 / 0.897 / 0.898</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.577</td><td>1.000</td><td>45</td><td>33</td><td>0</td><td>0</td></tr>
+<tr><td>0.200</td><td>0.682</td><td>1.000</td><td>45</td><td>21</td><td>12</td><td>0</td></tr>
+<tr><td>0.300</td><td>0.724</td><td>0.933</td><td>42</td><td>16</td><td>17</td><td>3</td></tr>
+<tr><td>0.400</td><td>0.894</td><td>0.933</td><td>42</td><td>5</td><td>28</td><td>3</td></tr>
+<tr><td>0.500</td><td>0.930</td><td>0.889</td><td>40</td><td>3</td><td>30</td><td>5</td></tr>
+<tr><td>0.600</td><td>0.925</td><td>0.822</td><td>37</td><td>3</td><td>30</td><td>8</td></tr>
+<tr><td>0.700</td><td>0.909</td><td>0.667</td><td>30</td><td>3</td><td>30</td><td>15</td></tr>
+<tr><td>0.800</td><td>1.000</td><td>0.111</td><td>5</td><td>0</td><td>33</td><td>40</td></tr>
+<tr><td>0.900</td><td>0.000</td><td>0.000</td><td>0</td><td>0</td><td>33</td><td>45</td></tr>
+</tbody></table>
+</section>
+<section><h3>st (n=78)</h3>
+<ul>
+<li>### st (n=78)</li>
+<li>- Accuracy: 0.897 | ROC-AUC: 0.921 | Average Precision: 0.946</li>
+<li>- Label=1 P/R/F1: 0.930 / 0.889 / 0.909</li>
+<li>- Macro avg P/R/F1: 0.894 / 0.899 / 0.896</li>
+<li>- Weighted avg P/R/F1: 0.899 / 0.897 / 0.898</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.577</td><td>1.000</td><td>45</td><td>33</td><td>0</td><td>0</td></tr>
+<tr><td>0.200</td><td>0.620</td><td>0.978</td><td>44</td><td>27</td><td>6</td><td>1</td></tr>
+<tr><td>0.300</td><td>0.710</td><td>0.978</td><td>44</td><td>18</td><td>15</td><td>1</td></tr>
+<tr><td>0.400</td><td>0.820</td><td>0.911</td><td>41</td><td>9</td><td>24</td><td>4</td></tr>
+<tr><td>0.500</td><td>0.930</td><td>0.889</td><td>40</td><td>3</td><td>30</td><td>5</td></tr>
+<tr><td>0.600</td><td>0.923</td><td>0.800</td><td>36</td><td>3</td><td>30</td><td>9</td></tr>
+<tr><td>0.700</td><td>0.912</td><td>0.689</td><td>31</td><td>3</td><td>30</td><td>14</td></tr>
+<tr><td>0.800</td><td>1.000</td><td>0.489</td><td>22</td><td>0</td><td>33</td><td>23</td></tr>
+<tr><td>0.900</td><td>1.000</td><td>0.089</td><td>4</td><td>0</td><td>33</td><td>41</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_gbdt_tfidf (n=78)</h3>
+<ul>
+<li>### ensemble_gbdt_tfidf (n=78)</li>
+<li>- Accuracy: 0.692 | ROC-AUC: 0.859 | Average Precision: 0.906</li>
+<li>- Label=1 P/R/F1: 0.691 / 0.844 / 0.760</li>
+<li>- Macro avg P/R/F1: 0.693 / 0.665 / 0.666</li>
+<li>- Weighted avg P/R/F1: 0.693 / 0.692 / 0.680</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.678</td><td>0.889</td><td>40</td><td>19</td><td>14</td><td>5</td></tr>
+<tr><td>0.200</td><td>0.678</td><td>0.889</td><td>40</td><td>19</td><td>14</td><td>5</td></tr>
+<tr><td>0.300</td><td>0.679</td><td>0.844</td><td>38</td><td>18</td><td>15</td><td>7</td></tr>
+<tr><td>0.400</td><td>0.679</td><td>0.844</td><td>38</td><td>18</td><td>15</td><td>7</td></tr>
+<tr><td>0.500</td><td>0.691</td><td>0.844</td><td>38</td><td>17</td><td>16</td><td>7</td></tr>
+<tr><td>0.600</td><td>0.691</td><td>0.844</td><td>38</td><td>17</td><td>16</td><td>7</td></tr>
+<tr><td>0.700</td><td>0.760</td><td>0.844</td><td>38</td><td>12</td><td>21</td><td>7</td></tr>
+<tr><td>0.800</td><td>0.760</td><td>0.844</td><td>38</td><td>12</td><td>21</td><td>7</td></tr>
+<tr><td>0.900</td><td>0.844</td><td>0.844</td><td>38</td><td>7</td><td>26</td><td>7</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_gbdt_st (n=78)</h3>
+<ul>
+<li>### ensemble_gbdt_st (n=78)</li>
+<li>- Accuracy: 0.692 | ROC-AUC: 0.860 | Average Precision: 0.907</li>
+<li>- Label=1 P/R/F1: 0.691 / 0.844 / 0.760</li>
+<li>- Macro avg P/R/F1: 0.693 / 0.665 / 0.666</li>
+<li>- Weighted avg P/R/F1: 0.693 / 0.692 / 0.680</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.678</td><td>0.889</td><td>40</td><td>19</td><td>14</td><td>5</td></tr>
+<tr><td>0.200</td><td>0.672</td><td>0.867</td><td>39</td><td>19</td><td>14</td><td>6</td></tr>
+<tr><td>0.300</td><td>0.679</td><td>0.844</td><td>38</td><td>18</td><td>15</td><td>7</td></tr>
+<tr><td>0.400</td><td>0.679</td><td>0.844</td><td>38</td><td>18</td><td>15</td><td>7</td></tr>
+<tr><td>0.500</td><td>0.691</td><td>0.844</td><td>38</td><td>17</td><td>16</td><td>7</td></tr>
+<tr><td>0.600</td><td>0.691</td><td>0.844</td><td>38</td><td>17</td><td>16</td><td>7</td></tr>
+<tr><td>0.700</td><td>0.704</td><td>0.844</td><td>38</td><td>16</td><td>17</td><td>7</td></tr>
+<tr><td>0.800</td><td>0.760</td><td>0.844</td><td>38</td><td>12</td><td>21</td><td>7</td></tr>
+<tr><td>0.900</td><td>0.776</td><td>0.844</td><td>38</td><td>11</td><td>22</td><td>7</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_xgb_tfidf (n=78)</h3>
+<ul>
+<li>### ensemble_xgb_tfidf (n=78)</li>
+<li>- Accuracy: 0.795 | ROC-AUC: 0.852 | Average Precision: 0.886</li>
+<li>- Label=1 P/R/F1: 0.784 / 0.889 / 0.833</li>
+<li>- Macro avg P/R/F1: 0.800 / 0.778 / 0.783</li>
+<li>- Weighted avg P/R/F1: 0.797 / 0.795 / 0.791</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.636</td><td>0.933</td><td>42</td><td>24</td><td>9</td><td>3</td></tr>
+<tr><td>0.200</td><td>0.695</td><td>0.911</td><td>41</td><td>18</td><td>15</td><td>4</td></tr>
+<tr><td>0.300</td><td>0.741</td><td>0.889</td><td>40</td><td>14</td><td>19</td><td>5</td></tr>
+<tr><td>0.400</td><td>0.769</td><td>0.889</td><td>40</td><td>12</td><td>21</td><td>5</td></tr>
+<tr><td>0.500</td><td>0.784</td><td>0.889</td><td>40</td><td>11</td><td>22</td><td>5</td></tr>
+<tr><td>0.600</td><td>0.812</td><td>0.867</td><td>39</td><td>9</td><td>24</td><td>6</td></tr>
+<tr><td>0.700</td><td>0.850</td><td>0.756</td><td>34</td><td>6</td><td>27</td><td>11</td></tr>
+<tr><td>0.800</td><td>0.846</td><td>0.733</td><td>33</td><td>6</td><td>27</td><td>12</td></tr>
+<tr><td>0.900</td><td>0.914</td><td>0.711</td><td>32</td><td>3</td><td>30</td><td>13</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_xgb_st (n=78)</h3>
+<ul>
+<li>### ensemble_xgb_st (n=78)</li>
+<li>- Accuracy: 0.769 | ROC-AUC: 0.848 | Average Precision: 0.889</li>
+<li>- Label=1 P/R/F1: 0.765 / 0.867 / 0.812</li>
+<li>- Macro avg P/R/F1: 0.771 / 0.752 / 0.756</li>
+<li>- Weighted avg P/R/F1: 0.770 / 0.769 / 0.765</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.623</td><td>0.956</td><td>43</td><td>26</td><td>7</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.689</td><td>0.933</td><td>42</td><td>19</td><td>14</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.702</td><td>0.889</td><td>40</td><td>17</td><td>16</td><td>5</td></tr>
+<tr><td>0.400</td><td>0.727</td><td>0.889</td><td>40</td><td>15</td><td>18</td><td>5</td></tr>
+<tr><td>0.500</td><td>0.765</td><td>0.867</td><td>39</td><td>12</td><td>21</td><td>6</td></tr>
+<tr><td>0.600</td><td>0.796</td><td>0.867</td><td>39</td><td>10</td><td>23</td><td>6</td></tr>
+<tr><td>0.700</td><td>0.864</td><td>0.844</td><td>38</td><td>6</td><td>27</td><td>7</td></tr>
+<tr><td>0.800</td><td>0.868</td><td>0.733</td><td>33</td><td>5</td><td>28</td><td>12</td></tr>
+<tr><td>0.900</td><td>0.917</td><td>0.733</td><td>33</td><td>3</td><td>30</td><td>12</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_rf_tfidf (n=78)</h3>
+<ul>
+<li>### ensemble_rf_tfidf (n=78)</li>
+<li>- Accuracy: 0.859 | ROC-AUC: 0.879 | Average Precision: 0.911</li>
+<li>- Label=1 P/R/F1: 0.870 / 0.889 / 0.879</li>
+<li>- Macro avg P/R/F1: 0.857 / 0.854 / 0.855</li>
+<li>- Weighted avg P/R/F1: 0.859 / 0.859 / 0.859</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.618</td><td>0.933</td><td>42</td><td>26</td><td>7</td><td>3</td></tr>
+<tr><td>0.200</td><td>0.712</td><td>0.933</td><td>42</td><td>17</td><td>16</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.804</td><td>0.911</td><td>41</td><td>10</td><td>23</td><td>4</td></tr>
+<tr><td>0.400</td><td>0.851</td><td>0.889</td><td>40</td><td>7</td><td>26</td><td>5</td></tr>
+<tr><td>0.500</td><td>0.870</td><td>0.889</td><td>40</td><td>6</td><td>27</td><td>5</td></tr>
+<tr><td>0.600</td><td>0.889</td><td>0.889</td><td>40</td><td>5</td><td>28</td><td>5</td></tr>
+<tr><td>0.700</td><td>0.930</td><td>0.889</td><td>40</td><td>3</td><td>30</td><td>5</td></tr>
+<tr><td>0.800</td><td>0.927</td><td>0.844</td><td>38</td><td>3</td><td>30</td><td>7</td></tr>
+<tr><td>0.900</td><td>0.900</td><td>0.600</td><td>27</td><td>3</td><td>30</td><td>18</td></tr>
+</tbody></table>
+</section>
+<section><h3>ensemble_rf_st (n=78)</h3>
+<ul>
+<li>### ensemble_rf_st (n=78)</li>
+<li>- Accuracy: 0.846 | ROC-AUC: 0.866 | Average Precision: 0.901</li>
+<li>- Label=1 P/R/F1: 0.851 / 0.889 / 0.870</li>
+<li>- Macro avg P/R/F1: 0.845 / 0.838 / 0.841</li>
+<li>- Weighted avg P/R/F1: 0.846 / 0.846 / 0.845</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.606</td><td>0.956</td><td>43</td><td>28</td><td>5</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.656</td><td>0.933</td><td>42</td><td>22</td><td>11</td><td>3</td></tr>
+<tr><td>0.300</td><td>0.759</td><td>0.911</td><td>41</td><td>13</td><td>20</td><td>4</td></tr>
+<tr><td>0.400</td><td>0.784</td><td>0.889</td><td>40</td><td>11</td><td>22</td><td>5</td></tr>
+<tr><td>0.500</td><td>0.851</td><td>0.889</td><td>40</td><td>7</td><td>26</td><td>5</td></tr>
+<tr><td>0.600</td><td>0.886</td><td>0.867</td><td>39</td><td>5</td><td>28</td><td>6</td></tr>
+<tr><td>0.700</td><td>0.905</td><td>0.844</td><td>38</td><td>4</td><td>29</td><td>7</td></tr>
+<tr><td>0.800</td><td>0.923</td><td>0.800</td><td>36</td><td>3</td><td>30</td><td>9</td></tr>
+<tr><td>0.900</td><td>0.903</td><td>0.622</td><td>28</td><td>3</td><td>30</td><td>17</td></tr>
+</tbody></table>
+</section>
+<section><h3>llm (n=78)</h3>
+<ul>
+<li>### llm (n=78)</li>
+<li>- Accuracy: 0.833 | ROC-AUC: 0.811 | Average Precision: 0.787</li>
+<li>- Label=1 P/R/F1: 0.796 / 0.956 / 0.869</li>
+<li>- Macro avg P/R/F1: 0.856 / 0.811 / 0.820</li>
+<li>- Weighted avg P/R/F1: 0.847 / 0.833 / 0.828</li>
+</ul>
+<table><thead><tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th></tr></thead><tbody>
+<tr><td>0.100</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.200</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.300</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.400</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.500</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.600</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.700</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.800</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+<tr><td>0.900</td><td>0.796</td><td>0.956</td><td>43</td><td>11</td><td>22</td><td>2</td></tr>
+</tbody></table>
+</section>
+</body></html>
