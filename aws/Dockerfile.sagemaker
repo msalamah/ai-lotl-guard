@@ -1,0 +1,13 @@
+FROM python:3.11-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/ml/code
+COPY . /opt/ml/code
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir .
+
+ENV PYTHONPATH=/opt/ml/code
+ENTRYPOINT ["python", "scripts/sagemaker_train_llm.py"]

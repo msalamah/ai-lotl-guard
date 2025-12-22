@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::lotl-guard-artifacts",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": ["artifacts/llm/*", "artifacts/llm/"]
+        }
+      }
+    },
+    {
+      "Sid": "RWArtifactsPrefix",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      "Resource": "arn:aws:s3:::lotl-guard-artifacts/artifacts/llm/*"
+    }
+  ]
+}
