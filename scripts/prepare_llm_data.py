@@ -32,6 +32,7 @@ def _load_split_ids(splits_path: Path) -> Dict[str, List[int]]:
     return {
         "train": split_data.get("train_ids", []),
         "val": split_data.get("val_ids", []),
+        "test": split_data.get("test_ids", []),
     }
 
 
@@ -42,6 +43,7 @@ def main(
     output_dir: Path = typer.Option(Path("artifacts/llm"), help="Directory to store instruction data."),
     instruction: str = typer.Option(DEFAULT_INSTRUCTION, help="Instruction text for every sample."),
     include_val: bool = typer.Option(True, help="Also export validation split."),
+    include_test: bool = typer.Option(True, help="Also export test/final evaluation split if defined."),
 ) -> None:
     if not processed.exists():
         raise typer.BadParameter(f"Missing processed dataset at {processed}")
@@ -50,8 +52,10 @@ def main(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     stats: Dict[str, int] = {}
-    for split_name in ["train", "val"]:
+    for split_name in ["train", "val", "test"]:
         if split_name == "val" and not include_val:
+            continue
+        if split_name == "test" and not include_test:
             continue
         ids = split_map.get(split_name) or []
         if not ids:

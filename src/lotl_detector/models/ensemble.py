@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Sequence
 
@@ -140,9 +141,9 @@ def build_providers_from_metadata(metadata_list: Sequence[Dict[str, object]]) ->
             if SentenceTransformer is None:
                 raise RuntimeError("sentence-transformers is not installed; cannot use sentence provider.")
             classifier = load(meta["classifier_path"])
-            model_name = meta.get("model_name") or "all-MiniLM-L6-v2"
+            model_name = _resolve_sentence_model_name(meta.get("model_name"))
             batch_size = int(meta.get("batch_size", 32))
-            embedder = SentenceTransformer(str(model_name))
+            embedder = SentenceTransformer(model_name)
 
             def _predict_sentence(
                 df: pd.DataFrame,
@@ -214,6 +215,31 @@ def load_providers_from_config(config_path: Path) -> List[ProbabilityProvider]:
     config = json.loads(config_path.read_text(encoding="utf-8"))
     metadata = config.get("providers", [])
     return build_providers_from_metadata(metadata)
+
+
+def _resolve_sentence_model_name(name: str | None) -> str:
+    """Resolve a sentence-transformer model to a local path when possible."""
+    fallback = name or "all-MiniLM-L6-v2"
+    candidates = []
+    base = Path(fallback)
+    candidates.append(base)
+    if base.name != fallback:
+        candidates.append(Path(base.name))
+    env_home = os.getenv("SENTENCE_TRANSFORMERS_HOME")
+    if env_home:
+        home = Path(env_home)
+        candidates.append(home / fallback)
+        candidates.append(home / base.name)
+    default_cache = Path("artifacts/cache_models")
+    candidates.append(default_cache / fallback)
+    candidates.append(default_cache / base.name)
+    torch_cache = Path.home() / ".cache" / "sentence_transformers"
+    candidates.append(torch_cache / fallback)
+    candidates.append(torch_cache / base.name)
+    for candidate in candidates:
+        if candidate and candidate.exists():
+            return str(candidate)
+    return fallback
 def _load_sentence_metadata(base_dir: Path) -> Dict[str, object] | None:
     classifier_path = base_dir / "st_classifier.pkl"
     config_path = base_dir / "st_config.json"

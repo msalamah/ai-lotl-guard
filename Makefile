@@ -3,6 +3,16 @@
 DATASET := data/dataset.jsonl
 ARTIFACT_DIR := artifacts
 MPL_ENV := MPLBACKEND=Agg MPLCONFIGDIR=.matplotlib-cache
+EVAL_SPLIT ?= val
+COMPARE_MODELS ?= gbdt,xgb,rf,text,st,ensemble_gbdt_tfidf,ensemble_gbdt_st,ensemble_xgb_tfidf,ensemble_xgb_st,ensemble_rf_tfidf,ensemble_rf_st,llm
+LLM_SPLIT ?= val
+LLM_MODEL_DIR ?= artifacts/models/llm_local
+LLM_PRED_PATH := $(ARTIFACT_DIR)/reports/llm_predictions_$(EVAL_SPLIT).jsonl
+LLM_METRICS_PATH := $(ARTIFACT_DIR)/reports/llm_predictions_$(EVAL_SPLIT)_metrics.json
+SUMMARY_PATH ?= $(ARTIFACT_DIR)/eval/$(EVAL_SPLIT)_comparison_summary.json
+DASHBOARD_PATH ?= $(ARTIFACT_DIR)/reports/model_dashboard_$(EVAL_SPLIT).md
+COST_JSON ?= $(ARTIFACT_DIR)/eval/llm_reasoner_metrics_$(EVAL_SPLIT).json
+COST_REPORT ?= $(ARTIFACT_DIR)/reports/cost_comparison_$(EVAL_SPLIT).md
 
 .PHONY: help setup preprocess train evaluate serve test lint
 
@@ -23,6 +33,10 @@ help:
 	@echo "  make preprocess  - Run preprocessing & leakage-safe splits"
 	@echo "  make train       - Train models (GBDT/text/ensemble)"
 	@echo "  make evaluate    - Produce metrics/latency/cost/failure reports"
+	@echo "  make compare     - Run scripts/compare_models.py on --dataset=$(EVAL_SPLIT)"
+	@echo "  make llm-predict - Run scripts/llm_predict.py on artifacts/llm/$(LLM_SPLIT).jsonl"
+	@echo "  make dashboard   - Build Markdown dashboard from $(SUMMARY_PATH)"
+	@echo "  make cost-report - Build cost/latency benchmark vs Claude"
 	@echo "  make serve       - Launch Chainlit demo"
 	@echo "  make test        - Run pytest suite"
 	@echo "  make lint        - Run Ruff (and future linters)"
@@ -103,6 +117,38 @@ evaluate:
 serve:
 	$(require-dataset)
 	$(not-implemented)
+
+compare:
+	uv run python scripts/compare_models.py \
+		--models $(COMPARE_MODELS) \
+		--dataset $(EVAL_SPLIT) \
+		--processed $(ARTIFACT_DIR)/processed.parquet \
+		--splits $(ARTIFACT_DIR)/splits.json \
+		--cost-config configs/costs.json \
+		--llm-predictions $(LLM_PRED_PATH) \
+		--llm-metrics $(LLM_METRICS_PATH)
+
+llm-predict:
+	uv run python scripts/llm_predict.py \
+		--input-path artifacts/llm/$(LLM_SPLIT).jsonl \
+		--output-path $(ARTIFACT_DIR)/reports/llm_predictions_$(LLM_SPLIT).jsonl \
+		--metrics-path $(ARTIFACT_DIR)/reports/llm_predictions_$(LLM_SPLIT)_metrics.json \
+		--model-dir $(LLM_MODEL_DIR)
+
+dashboard:
+	uv run python scripts/build_dashboard.py \
+		--summary-path $(SUMMARY_PATH) \
+		--output-path $(DASHBOARD_PATH)
+
+cost-report:
+	uv run python scripts/benchmark_g4.py \
+		--summary-path $(SUMMARY_PATH) \
+		--processed $(ARTIFACT_DIR)/processed.parquet \
+		--splits $(ARTIFACT_DIR)/splits.json \
+		--dataset $(EVAL_SPLIT) \
+		--cost-config configs/costs.json \
+		--output-json $(COST_JSON) \
+		--report-path $(COST_REPORT)
 
 test:
 	uv run pytest

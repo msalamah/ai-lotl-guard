@@ -225,7 +225,7 @@ def main(
         "gbdt,xgb,rf,text,st,ensemble",
         help="Comma-separated model keys to evaluate (add 'llm' after running llm_predict).",
     ),
-    dataset: str = typer.Option("val", help="Dataset split to use: train|val|test"),
+    dataset: str = typer.Option("val", help="Dataset split name present in splits.json (e.g. train|val|test|final)"),
     processed: Path = typer.Option(Path("artifacts/processed.parquet"), help="Processed dataset"),
     splits: Path = typer.Option(Path("artifacts/splits.json"), help="Split metadata"),
     model_dir: Path = typer.Option(Path("artifacts/models"), help="Directory containing trained models"),
@@ -248,11 +248,11 @@ def main(
     model_keys = [m.strip().lower() for m in models.split(",") if m.strip()]
     if not model_keys:
         raise typer.BadParameter("No models specified.")
-    if dataset not in {"train", "val", "test"}:
-        raise typer.BadParameter("dataset must be one of train|val|test")
-
     df = _load_processed(processed)
     split_data = _load_json(splits)
+    key = f"{dataset}_ids"
+    if key not in split_data:
+        raise typer.BadParameter(f"dataset '{dataset}' not found in {splits}")
     subset = _select_split(df, split_data, dataset)
     if subset.empty:
         raise typer.BadParameter(f"No rows available for split '{dataset}'.")
